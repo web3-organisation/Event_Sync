@@ -2,92 +2,103 @@
 
 import { useState } from "react";
 import SpeakerCard from "./SpeakerCard";
+import styles from "./SessionGroup.module.css";
 
 const SessionGroup = ({ session, searchQuery }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const [collapsed, setCollapsed] = useState(false);
 
   const count = session.speakers.length;
 
+  // Grille adaptée selon le nombre de speakers
   const gridClass =
-    count === 1
-      ? "grid-cols-1 max-w-sm mx-auto"
-      : count === 2
-      ? "grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto"
-      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+      count === 1
+          ? `${styles.grid} ${styles.gridOne}`
+          : count === 2
+              ? `${styles.grid} ${styles.gridTwo}`
+              : styles.grid;
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-gray-100
-                    shadow-sm mb-8">
+      <div className={styles.group}>
 
-      {/* ── En-tête session ─────────────────── */}
-      <div
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="
-          flex items-start justify-between gap-4 p-6 cursor-pointer
-          bg-gradient-to-r from-violet-600 to-purple-600
-          hover:opacity-95 transition-opacity
-        "
-      >
-        <div className="flex-1">
-          <span className="inline-block bg-white/20 text-white
-                           text-xs font-semibold px-3 py-1 rounded-full
-                           uppercase tracking-wider mb-3">
+        {/* ── HEADER ───────────────────────── */}
+        <div
+            className={styles.header}
+            onClick={() => setCollapsed(!collapsed)}
+        >
+
+          <div className={styles.headerInfo}>
+
+            {/* Badge */}
+            <span className={styles.badge}>
             Session {session.id}
           </span>
 
-          <h2 className="text-xl font-bold text-white mb-1">
-            {session.name}
-          </h2>
+            {/* Nom session */}
+            <h2 className={styles.sessionName}>
+              {session.name}
+            </h2>
 
-          {session.description && (
-            <p className="text-white/75 text-sm mb-3">
-              {session.description}
-            </p>
-          )}
+            {/* Description */}
+            {session.description && (
+                <p className={styles.description}>
+                  {session.description}
+                </p>
+            )}
 
-          <div className="flex flex-wrap gap-3">
-            <span className="text-white/85 text-sm">📅 {session.date}</span>
-            <span className="text-white/85 text-sm">🕐 {session.time}</span>
-            {session.location && (
-              <span className="text-white/85 text-sm">
+            {/* Meta infos */}
+            <div className={styles.meta}>
+            <span className={styles.metaItem}>
+              📅 {session.date}
+            </span>
+              <span className={styles.metaItem}>
+              🕐 {session.time}
+            </span>
+              {session.location && (
+                  <span className={styles.metaItem}>
                 📍 {session.location}
               </span>
-            )}
-            <span className="bg-white/20 text-white text-xs
-                             font-semibold px-3 py-1 rounded-full">
+              )}
+              <span className={styles.speakerCount}>
               🎤 {count} intervenant{count > 1 ? "s" : ""}
             </span>
+            </div>
+
           </div>
+
+          {/* Bouton collapse */}
+          <button className={styles.toggleBtn}>
+            {collapsed ? "▼ Afficher" : "▲ Masquer"}
+          </button>
+
         </div>
 
-        <button className="flex-shrink-0 bg-white/20 hover:bg-white/30
-                           text-white text-sm font-medium
-                           px-4 py-2 rounded-xl transition-colors">
-          {isCollapsed ? "▼ Afficher" : "▲ Masquer"}
-        </button>
+        {/* ── CONTENT ──────────────────────── */}
+        {!collapsed && (
+            <div className={styles.content}>
+
+              {/* Sous titre */}
+              <p className={styles.subtitle}>
+                {count === 1
+                    ? "👤 Intervenant unique pour cette session"
+                    : `👥 ${count} intervenants pour cette session`}
+              </p>
+
+              {/* Grille des cartes */}
+              <div className={gridClass}>
+                {session.speakers.map((speaker) => (
+                    <SpeakerCard
+                        key={speaker.id}
+                        speaker={speaker}
+                        searchQuery={searchQuery}
+                    />
+                ))}
+              </div>
+
+            </div>
+        )}
+
       </div>
-
-      {/* ── Grille des speakers ─────────────── */}
-      {!isCollapsed && (
-        <div className="bg-gray-50 p-6">
-          <p className="text-xs text-gray-400 text-center mb-5">
-            {count === 1
-              ? "👤 Intervenant unique pour cette session"
-              : `👥 ${count} intervenants pour cette session`}
-          </p>
-
-          <div className={`grid gap-4 ${gridClass}`}>
-            {session.speakers.map((speaker) => (
-              <SpeakerCard
-                key={speaker.id}
-                speaker={speaker}
-                searchQuery={searchQuery}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
   );
 };
 

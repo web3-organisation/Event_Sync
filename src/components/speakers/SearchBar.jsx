@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./SearchBar.module.css";
+
 const SearchBar = ({
                        search,
                        setSearch,
@@ -8,127 +10,99 @@ const SearchBar = ({
                        sessions,
                        resultCount,
                    }) => {
-    // Vérifier si des filtres sont actifs
+
     const hasFilters = search !== "" || selectedSession !== "all";
 
-    // Réinitialiser tous les filtres
     const resetAll = () => {
         setSearch("");
         setSelectedSession("all");
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-gray-100
-                    shadow-sm p-6 mb-10">
+        <div className={styles.wrapper}>
 
-            {/* ── Titre section ──────────────────── */}
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold text-gray-500 uppercase
-                       tracking-wider">
-                    🔍 Rechercher un intervenant
-                </h2>
+            {/* ── Titre + résultats ───────────── */}
+            <div className={styles.top}>
 
-                {/* Nombre de résultats */}
+        <span className={styles.label}>
+          Rechercher un intervenant
+        </span>
+
                 {hasFilters && (
-                    <span className="text-xs bg-violet-100 text-violet-600
-                           font-semibold px-3 py-1 rounded-full">
-            {resultCount} résultat{resultCount > 1 ? "s" : ""} trouvé
-                        {resultCount > 1 ? "s" : ""}
+                    <span className={styles.resultBadge}>
+            {resultCount} résultat{resultCount > 1 ? "s" : ""}
           </span>
                 )}
+
             </div>
 
-            {/* ── Input + Select ─────────────────── */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* ── Input + Select ──────────────── */}
+            <div className={styles.row}>
 
-                {/* Input de recherche */}
-                <div className="flex-1 relative">
+                {/* Input recherche */}
+                <div className={styles.inputWrapper}>
+
+                    <span className={styles.inputIcon}>🔍</span>
+
                     <input
                         type="text"
-                        placeholder="Rechercher par nom, email, entreprise, poste..."
+                        placeholder="Nom, email, entreprise, poste..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="
-              w-full pl-10 pr-10 py-3 rounded-xl
-              bg-gray-50 text-sm text-gray-700
-              border-2 border-gray-200
-              focus:border-violet-500 focus:bg-white
-              focus:outline-none transition-all
-              placeholder:text-gray-400
-            "
+                        className={styles.input}
                     />
 
-                    {/* Icône loupe */}
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2
-                           text-gray-400 text-lg pointer-events-none">
-            🔍
-          </span>
-
-                    {/* Bouton effacer le texte */}
                     {search && (
                         <button
+                            className={styles.clearBtn}
                             onClick={() => setSearch("")}
-                            className="absolute right-3 top-1/2 -translate-y-1/2
-                         text-gray-400 hover:text-gray-600
-                         transition-colors text-sm"
                             title="Effacer"
                         >
                             ✕
                         </button>
                     )}
+
                 </div>
 
-                {/* Select des sessions */}
-                <div className="relative min-w-[250px]">
+                {/* Select session */}
+                <div className={styles.selectWrapper}>
+
+                    <span className={styles.selectIcon}>🗓️</span>
+
                     <select
                         value={selectedSession}
                         onChange={(e) => setSelectedSession(e.target.value)}
-                        className="
-              w-full pl-10 pr-4 py-3 rounded-xl
-              bg-gray-50 text-sm text-gray-700
-              border-2 border-gray-200
-              focus:border-violet-500 focus:bg-white
-              focus:outline-none transition-all
-              appearance-none cursor-pointer
-            "
+                        className={styles.select}
                     >
                         <option value="all">
-                            📋 Toutes les sessions ({sessions.length})
+                            Toutes les sessions ({sessions.length})
                         </option>
-                        {sessions.map((session) => (
-                            <option key={session.id} value={session.id}>
-                                {session.name} — {session.speakers.length} intervenant
-                                {session.speakers.length > 1 ? "s" : ""}
+                        {sessions.map((s) => (
+                            <option key={s.id} value={s.id}>
+                                {s.name} — {s.speakers.length} intervenant
+                                {s.speakers.length > 1 ? "s" : ""}
                             </option>
                         ))}
                     </select>
 
-                    {/* Icône session */}
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2
-                           text-gray-400 text-lg pointer-events-none">
-            🗓️
-          </span>
+                    <span className={styles.arrow}>▼</span>
 
-                    {/* Flèche dropdown */}
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2
-                           text-gray-400 pointer-events-none">
-            ▼
-          </span>
                 </div>
+
             </div>
 
-            {/* ── Bouton réinitialiser ───────────── */}
+            {/* ── Reset ───────────────────────── */}
             {hasFilters && (
-                <div className="mt-4 flex justify-end">
+                <div className={styles.resetRow}>
                     <button
+                        className={styles.resetBtn}
                         onClick={resetAll}
-                        className="text-sm text-violet-500 hover:text-violet-700
-                       font-medium transition-colors flex items-center gap-1"
                     >
                         ✕ Réinitialiser les filtres
                     </button>
                 </div>
             )}
+
         </div>
     );
 };

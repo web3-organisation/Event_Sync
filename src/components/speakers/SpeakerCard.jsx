@@ -1,145 +1,127 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import styles from "./SpeakerCard.module.css";
 
 const SpeakerCard = ({ speaker, searchQuery }) => {
+
     const [copied, setCopied]   = useState(false);
     const [showBio, setShowBio] = useState(false);
 
+    // ── Copier email ───────────────────────────
     const copyEmail = () => {
         navigator.clipboard.writeText(speaker.email);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    // ── Fonction pour surligner le texte qui correspond à la recherche ──
+    // ── Surligner le texte recherché ───────────
     const highlight = (text) => {
         if (!searchQuery || searchQuery.trim() === "") return text;
 
         const regex = new RegExp(`(${searchQuery})`, "gi");
-        const parts = text.split(regex);
+        const parts = String(text).split(regex);
 
         return parts.map((part, i) =>
-                regex.test(part) ? (
-                    <span key={i} className="bg-yellow-200 text-yellow-900
-                                  rounded px-0.5 font-semibold">
-          {part}
-        </span>
-                ) : (
-                    part
-                )
+            regex.test(part)
+                ? <span key={i} className={styles.highlight}>{part}</span>
+                : part
         );
     };
 
     return (
-        <div
-            className="
-        flex flex-col bg-white rounded-2xl overflow-hidden
-        border border-gray-100 shadow-sm
-        hover:shadow-xl hover:-translate-y-1
-        transition-all duration-300
-      "
-        >
-            {/* ── Photo ───────────────────────────── */}
-            <div className="bg-gradient-to-br from-violet-100 to-purple-100
-                      flex justify-center py-6">
-                <div className="relative">
-                    <Image
+        <div className={styles.card}>
+
+            {/* ── HEADER : Photo ───────────────── */}
+            <div className={styles.header}>
+                <div className={styles.avatarWrapper}>
+                    <img
                         src={speaker.picture}
                         alt={speaker.name}
-                        width={90}
-                        height={90}
-                        className="rounded-full border-4 border-white
-                       shadow-md object-cover"
+                        className={styles.avatar}
+                        onError={(e) => {
+                            e.target.src = `https://ui-avatars.com/api/?name=${speaker.name}&background=6366f1&color=fff`;
+                        }}
                     />
-                    <span
-                        className="absolute bottom-1 right-1
-                       w-4 h-4 rounded-full
-                       bg-green-400 border-2 border-white"
-                    />
+                    <span className={styles.badge} />
                 </div>
             </div>
 
-            {/* ── Corps ───────────────────────────── */}
-            <div className="flex flex-col flex-1 p-5">
+            {/* ── BODY ─────────────────────────── */}
+            <div className={styles.body}>
 
                 {/* Nom / Titre / Entreprise */}
-                <div className="text-center mb-4">
-                    <h3 className="text-lg font-bold text-gray-800">
+                <div className={styles.info}>
+                    <h3 className={styles.name}>
                         {highlight(speaker.name)}
                     </h3>
-                    <p className="text-sm text-violet-600 font-medium mt-0.5">
+                    <p className={styles.title}>
                         {highlight(speaker.title)}
                     </p>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className={styles.company}>
                         🏢 {highlight(speaker.company)}
                     </p>
                 </div>
 
                 {/* Bio */}
                 {speaker.bio && (
-                    <div className="mb-4 text-center">
-                        <p
-                            className={`text-xs text-gray-500 leading-relaxed
-                          ${!showBio ? "line-clamp-2" : ""}`}
-                        >
-                            {speaker.bio}
+                    <div className={styles.bioWrapper}>
+                        <p className={styles.bio}>
+                            {showBio
+                                ? speaker.bio
+                                : speaker.bio.slice(0, 80) + "..."}
                         </p>
                         <button
+                            className={styles.bioBtn}
                             onClick={() => setShowBio(!showBio)}
-                            className="text-xs text-violet-400 hover:text-violet-600
-                         mt-1 transition-colors"
                         >
                             {showBio ? "Voir moins ▲" : "Voir plus ▼"}
                         </button>
                     </div>
                 )}
 
-                <hr className="border-gray-100 mb-4" />
+                <hr className={styles.divider} />
 
                 {/* Contacts */}
-                <div className="space-y-2.5 flex-1 mb-4">
+                <div className={styles.contacts}>
 
                     {/* Email */}
-                    <div className="flex items-center gap-2 text-sm">
-                        <span>📧</span>
+                    <div className={styles.contactRow}>
+                        <span className={styles.icon}>📧</span>
                         <a
                             href={`mailto:${speaker.email}`}
-                            className="flex-1 truncate text-violet-600 hover:underline"
+                            className={`${styles.link} ${styles.emailLink}`}
                         >
                             {highlight(speaker.email)}
                         </a>
                         <button
+                            className={styles.copyBtn}
                             onClick={copyEmail}
                             title="Copier l'email"
-                            className="flex-shrink-0 px-2 py-1 rounded-lg text-xs
-                         bg-gray-100 hover:bg-gray-200 transition-colors"
                         >
                             {copied ? "✅" : "📋"}
                         </button>
                     </div>
 
                     {/* Téléphone */}
-                    <div className="flex items-center gap-2 text-sm">
-                        <span>📞</span>
+                    <div className={styles.contactRow}>
+                        <span className={styles.icon}>📞</span>
                         <a
                             href={`tel:${speaker.phone}`}
-                            className="text-gray-600 hover:text-violet-600 transition-colors"
+                            className={styles.link}
                         >
                             {highlight(speaker.phone)}
                         </a>
                     </div>
 
                     {/* LinkedIn */}
-                    <div className="flex items-center gap-2 text-sm">
-                        <span>💼</span>
+                    <div className={styles.contactRow}>
+                        <span className={styles.icon}>💼</span>
                         <a
                             href={`https://${speaker.linkedin}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex-1 truncate text-gray-600
-                         hover:text-violet-600 transition-colors"
+                            className={styles.link}
                         >
                             {speaker.linkedin}
                         </a>
@@ -147,22 +129,21 @@ const SpeakerCard = ({ speaker, searchQuery }) => {
 
                     {/* Twitter */}
                     {speaker.twitter && (
-                        <div className="flex items-center gap-2 text-sm">
-                            <span>🐦</span>
-                            <span className="text-gray-600">{speaker.twitter}</span>
+                        <div className={styles.contactRow}>
+                            <span className={styles.icon}>🐦</span>
+                            <span className={styles.link}>
+                {speaker.twitter}
+              </span>
                         </div>
                     )}
+
                 </div>
 
                 {/* Boutons */}
-                <div className="flex gap-2 mt-auto">
+                <div className={styles.actions}>
                     <a
                         href={`mailto:${speaker.email}`}
-                        className="
-              flex-1 text-center py-2 rounded-xl text-sm font-semibold
-              text-white bg-gradient-to-r from-violet-600 to-purple-600
-              hover:opacity-90 transition-opacity
-            "
+                        className={styles.btnContact}
                     >
                         Contacter
                     </a>
@@ -170,15 +151,12 @@ const SpeakerCard = ({ speaker, searchQuery }) => {
                         href={`https://${speaker.linkedin}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="
-              flex-1 text-center py-2 rounded-xl text-sm font-semibold
-              text-violet-600 border-2 border-violet-600
-              hover:bg-violet-600 hover:text-white transition-all
-            "
+                        className={styles.btnLinkedin}
                     >
                         LinkedIn
                     </a>
                 </div>
+
             </div>
         </div>
     );
