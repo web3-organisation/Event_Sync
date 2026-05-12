@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { isSessionLive } from "@/lib/session-utils";
+import { prisma } from "@/app/lib/prisma";
+import { isSessionLive } from "@/app/lib/session-utils";
 
 export async function POST(_req, { params }) {
   const { id: questionId } = params;
