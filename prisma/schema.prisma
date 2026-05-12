@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Admin {
@@ -117,6 +118,8 @@ model Question {
 
   @@map("questions")
 }
+
+// ── Tables de jointure Admin ──────────────────────────────
 
 model AdminQuestion {
   adminId    String @map("id_admins")
