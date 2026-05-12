@@ -1,0 +1,378 @@
+:root {
+    --ev-primary: #6C63FF;
+    --ev-accent: #00D4AA;
+    --ev-dark: #1a1a2e;
+    --ev-dark-2: #16213e;
+    --ev-surface: #F8F9FF;
+    --ev-border: #dde0ef;
+    --ev-danger: #FF6B6B;
+}
+
+.page {
+    display: flex;
+    min-height: 100vh;
+    background: var(--ev-surface);
+    font-family: 'Geist', sans-serif;
+}
+
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--ev-dark);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2.5rem;
+    padding: 0 0.5rem;
+}
+
+.logoIcon {
+    font-size: 22px;
+}
+
+.logoText {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.navItem,
+.navItemActive {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.navItem:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.navItemActive {
+    background: rgba(108, 99, 255, 0.25);
+    color: #a8a3ff;
+}
+
+.sidebarFooter {
+    padding-top: 1rem;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.adminBadge {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 0.5rem;
+}
+
+.main {
+    flex: 1;
+    padding: 2rem 2.5rem;
+    min-width: 0;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pageTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ev-dark);
+    letter-spacing: -0.03em;
+}
+
+.pageSubtitle {
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.searchInput {
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 0.5px solid var(--ev-border);
+    background: #fff;
+    font-size: 13px;
+    color: var(--ev-dark);
+    outline: none;
+    width: 200px;
+    transition: border-color 0.15s;
+}
+
+.searchInput:focus {
+    border-color: var(--ev-primary);
+}
+
+.btnPrimary {
+    height: 38px;
+    padding: 0 18px;
+    background: var(--ev-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.btnPrimary:hover {
+    opacity: 0.88;
+}
+
+.btnPrimary:active {
+    transform: scale(0.98);
+}
+
+.btnPrimary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btnSecondary {
+    height: 38px;
+    padding: 0 18px;
+    background: transparent;
+    color: #666;
+    border: 0.5px solid var(--ev-border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btnSecondary:hover {
+    background: #f3f3f8;
+}
+
+.statsRow {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.statCard {
+    background: #fff;
+    border: 0.5px solid var(--ev-border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    min-width: 110px;
+}
+
+.statLabel {
+    font-size: 11px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.statValue {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.sections {
+    display: flex;
+    flex-direction: column;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 5rem 0;
+    color: #aaa;
+}
+
+.emptyIcon {
+    font-size: 48px;
+}
+
+.emptyText {
+    font-size: 15px;
+    color: #aaa;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #eee;
+    border-top-color: var(--ev-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 30, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 0.5px solid var(--ev-border);
+}
+
+.modalTitle {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ev-dark);
+    letter-spacing: -0.02em;
+}
+
+.modalClose {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.modalClose:hover {
+    background: #f3f3f8;
+    color: #555;
+}
+
+.form {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fieldRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.input,
+.textarea {
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 0.5px solid var(--ev-border);
+    background: var(--ev-surface);
+    font-size: 14px;
+    color: var(--ev-dark);
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    width: 100%;
+}
+
+.textarea {
+    height: auto;
+    padding: 10px 12px;
+    resize: vertical;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: var(--ev-primary);
+    background: #fff;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+.errorBanner {
+    background: #fff0f0;
+    border: 0.5px solid #ffccc7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #c0392b;
+}
