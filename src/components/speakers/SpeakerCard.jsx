@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const SpeakerCard = ({ speaker }) => {
+const SpeakerCard = ({ speaker, searchQuery }) => {
     const [copied, setCopied]   = useState(false);
     const [showBio, setShowBio] = useState(false);
 
@@ -11,6 +11,25 @@ const SpeakerCard = ({ speaker }) => {
         navigator.clipboard.writeText(speaker.email);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    // ── Fonction pour surligner le texte qui correspond à la recherche ──
+    const highlight = (text) => {
+        if (!searchQuery || searchQuery.trim() === "") return text;
+
+        const regex = new RegExp(`(${searchQuery})`, "gi");
+        const parts = text.split(regex);
+
+        return parts.map((part, i) =>
+                regex.test(part) ? (
+                    <span key={i} className="bg-yellow-200 text-yellow-900
+                                  rounded px-0.5 font-semibold">
+          {part}
+        </span>
+                ) : (
+                    part
+                )
+        );
     };
 
     return (
@@ -22,7 +41,6 @@ const SpeakerCard = ({ speaker }) => {
         transition-all duration-300
       "
         >
-
             {/* ── Photo ───────────────────────────── */}
             <div className="bg-gradient-to-br from-violet-100 to-purple-100
                       flex justify-center py-6">
@@ -49,13 +67,13 @@ const SpeakerCard = ({ speaker }) => {
                 {/* Nom / Titre / Entreprise */}
                 <div className="text-center mb-4">
                     <h3 className="text-lg font-bold text-gray-800">
-                        {speaker.name}
+                        {highlight(speaker.name)}
                     </h3>
                     <p className="text-sm text-violet-600 font-medium mt-0.5">
-                        {speaker.title}
+                        {highlight(speaker.title)}
                     </p>
                     <p className="text-sm text-gray-400 mt-1">
-                        🏢 {speaker.company}
+                        🏢 {highlight(speaker.company)}
                     </p>
                 </div>
 
@@ -90,7 +108,7 @@ const SpeakerCard = ({ speaker }) => {
                             href={`mailto:${speaker.email}`}
                             className="flex-1 truncate text-violet-600 hover:underline"
                         >
-                            {speaker.email}
+                            {highlight(speaker.email)}
                         </a>
                         <button
                             onClick={copyEmail}
@@ -109,7 +127,7 @@ const SpeakerCard = ({ speaker }) => {
                             href={`tel:${speaker.phone}`}
                             className="text-gray-600 hover:text-violet-600 transition-colors"
                         >
-                            {speaker.phone}
+                            {highlight(speaker.phone)}
                         </a>
                     </div>
 
@@ -134,7 +152,6 @@ const SpeakerCard = ({ speaker }) => {
                             <span className="text-gray-600">{speaker.twitter}</span>
                         </div>
                     )}
-
                 </div>
 
                 {/* Boutons */}
@@ -162,7 +179,6 @@ const SpeakerCard = ({ speaker }) => {
                         LinkedIn
                     </a>
                 </div>
-
             </div>
         </div>
     );
