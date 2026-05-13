@@ -119,8 +119,6 @@ model Question {
   @@map("questions")
 }
 
-// ── Tables de jointure Admin ──────────────────────────────
-
 model AdminQuestion {
   adminId    String @map("id_admins")
   questionId String @map("id_questions")
