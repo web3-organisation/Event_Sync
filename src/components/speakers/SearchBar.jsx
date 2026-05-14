@@ -21,54 +21,41 @@ const SearchBar = ({
     return (
         <div className={styles.wrapper}>
 
-            {/* ── Titre + résultats ───────────── */}
             <div className={styles.top}>
-
-        <span className={styles.label}>
-          Rechercher un intervenant
-        </span>
+                <span className={styles.label}>
+                    🔍 Rechercher un intervenant
+                </span>
 
                 {hasFilters && (
                     <span className={styles.resultBadge}>
-            {resultCount} résultat{resultCount > 1 ? "s" : ""}
-          </span>
+                        {resultCount} résultat{resultCount > 1 ? "s" : ""}
+                    </span>
                 )}
-
             </div>
 
-            {/* ── Input + Select ──────────────── */}
             <div className={styles.row}>
 
-                {/* Input recherche */}
+                {/* Input */}
                 <div className={styles.inputWrapper}>
-
-                    <span className={styles.inputIcon}>🔍</span>
-
                     <input
                         type="text"
-                        placeholder="Nom, email, entreprise, poste..."
+                        placeholder="Nom, bio..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className={styles.input}
                     />
-
                     {search && (
                         <button
                             className={styles.clearBtn}
                             onClick={() => setSearch("")}
-                            title="Effacer"
                         >
                             ✕
                         </button>
                     )}
-
                 </div>
 
-                {/* Select session */}
+                {/* Select */}
                 <div className={styles.selectWrapper}>
-
-                    <span className={styles.selectIcon}>🗓️</span>
-
                     <select
                         value={selectedSession}
                         onChange={(e) => setSelectedSession(e.target.value)}
@@ -79,19 +66,15 @@ const SearchBar = ({
                         </option>
                         {sessions.map((s) => (
                             <option key={s.id} value={s.id}>
-                                {s.name} — {s.speakers.length} intervenant
+                                {s.title} — {s.speakers.length} intervenant
                                 {s.speakers.length > 1 ? "s" : ""}
                             </option>
                         ))}
                     </select>
-
-                    <span className={styles.arrow}>▼</span>
-
                 </div>
 
             </div>
 
-            {/* ── Reset ───────────────────────── */}
             {hasFilters && (
                 <div className={styles.resetRow}>
                     <button

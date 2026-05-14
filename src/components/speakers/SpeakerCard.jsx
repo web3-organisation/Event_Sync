@@ -8,20 +8,32 @@ const SpeakerCard = ({ speaker, searchQuery }) => {
     const [copied, setCopied]   = useState(false);
     const [showBio, setShowBio] = useState(false);
 
-    // ── Copier email ───────────────────────────
+    // Get links from speakerLinks array
+    const linkedin = speaker.speakerLinks?.find(
+        (l) => l.label.toLowerCase() === "linkedin"
+    );
+    const twitter = speaker.speakerLinks?.find(
+        (l) => l.label.toLowerCase() === "twitter"
+    );
+    const email = speaker.speakerLinks?.find(
+        (l) => l.label.toLowerCase() === "email"
+    );
+    const phone = speaker.speakerLinks?.find(
+        (l) => l.label.toLowerCase() === "phone"
+    );
+
     const copyEmail = () => {
-        navigator.clipboard.writeText(speaker.email);
+        if (!email) return;
+        navigator.clipboard.writeText(email.url);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    // ── Surligner le texte recherché ───────────
+    // Highlight search query
     const highlight = (text) => {
         if (!searchQuery || searchQuery.trim() === "") return text;
-
         const regex = new RegExp(`(${searchQuery})`, "gi");
         const parts = String(text).split(regex);
-
         return parts.map((part, i) =>
             regex.test(part)
                 ? <span key={i} className={styles.highlight}>{part}</span>
@@ -32,35 +44,32 @@ const SpeakerCard = ({ speaker, searchQuery }) => {
     return (
         <div className={styles.card}>
 
-            {/* ── HEADER : Photo ───────────────── */}
+            {/* Photo */}
             <div className={styles.header}>
                 <div className={styles.avatarWrapper}>
                     <img
-                        src={speaker.picture}
-                        alt={speaker.name}
+                        src={
+                            speaker.photoUrl ||
+                            `https://ui-avatars.com/api/?name=${speaker.fullName}&background=6366f1&color=fff`
+                        }
+                        alt={speaker.fullName}
                         className={styles.avatar}
                         onError={(e) => {
-                            e.target.src = `https://ui-avatars.com/api/?name=${speaker.name}&background=6366f1&color=fff`;
+                            e.target.src = `https://ui-avatars.com/api/?name=${speaker.fullName}&background=6366f1&color=fff`;
                         }}
                     />
                     <span className={styles.badge} />
                 </div>
             </div>
 
-            {/* ── BODY ─────────────────────────── */}
+            {/* Body */}
             <div className={styles.body}>
 
-                {/* Nom / Titre / Entreprise */}
+                {/* Name */}
                 <div className={styles.info}>
                     <h3 className={styles.name}>
-                        {highlight(speaker.name)}
+                        {highlight(speaker.fullName)}
                     </h3>
-                    <p className={styles.title}>
-                        {highlight(speaker.title)}
-                    </p>
-                    <p className={styles.company}>
-                        🏢 {highlight(speaker.company)}
-                    </p>
                 </div>
 
                 {/* Bio */}
@@ -86,75 +95,109 @@ const SpeakerCard = ({ speaker, searchQuery }) => {
                 <div className={styles.contacts}>
 
                     {/* Email */}
-                    <div className={styles.contactRow}>
-                        <span className={styles.icon}>📧</span>
-                        <a
-                            href={`mailto:${speaker.email}`}
-                            className={`${styles.link} ${styles.emailLink}`}
-                        >
-                            {highlight(speaker.email)}
-                        </a>
-                        <button
-                            className={styles.copyBtn}
-                            onClick={copyEmail}
-                            title="Copier l'email"
-                        >
-                            {copied ? "✅" : "📋"}
-                        </button>
-                    </div>
-
-                    {/* Téléphone */}
-                    <div className={styles.contactRow}>
-                        <span className={styles.icon}>📞</span>
-                        <a
-                            href={`tel:${speaker.phone}`}
-                            className={styles.link}
-                        >
-                            {highlight(speaker.phone)}
-                        </a>
-                    </div>
-
-                    {/* LinkedIn */}
-                    <div className={styles.contactRow}>
-                        <span className={styles.icon}>💼</span>
-                        <a
-                            href={`https://${speaker.linkedin}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={styles.link}
-                        >
-                            {speaker.linkedin}
-                        </a>
-                    </div>
-
-                    {/* Twitter */}
-                    {speaker.twitter && (
+                    {email && (
                         <div className={styles.contactRow}>
-                            <span className={styles.icon}>🐦</span>
-                            <span className={styles.link}>
-                {speaker.twitter}
-              </span>
+                            <span className={styles.icon}>📧</span>
+                            <a
+                                href={`mailto:${email.url}`}
+                                className={`${styles.link} ${styles.emailLink}`}
+                            >
+                                {email.url}
+                            </a>
+                            <button
+                                className={styles.copyBtn}
+                                onClick={copyEmail}
+                            >
+                                {copied ? "✅" : "📋"}
+                            </button>
                         </div>
                     )}
 
+                    {/* Phone */}
+                    {phone && (
+                        <div className={styles.contactRow}>
+                            <span className={styles.icon}>📞</span>
+                            <a
+                                href={`tel:${phone.url}`}
+                                className={styles.link}
+                            >
+                                {phone.url}
+                            </a>
+                        </div>
+                    )}
+
+                    {/* LinkedIn */}
+                    {linkedin && (
+                        <div className={styles.contactRow}>
+                            <span className={styles.icon}>💼</span>
+                            <a
+                                href={linkedin.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.link}
+                            >
+                                {linkedin.url}
+                            </a>
+                        </div>
+                    )}
+
+                    {/* Twitter */}
+                    {twitter && (
+                        <div className={styles.contactRow}>
+                            <span className={styles.icon}>🐦</span>
+                            <a
+                                href={twitter.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.link}
+                            >
+                                {twitter.url}
+                            </a>
+                        </div>
+                    )}
+
+                    {/* Other links */}
+                    {speaker.speakerLinks
+                        ?.filter(
+                            (l) => !["linkedin", "twitter", "email", "phone"]
+                                .includes(l.label.toLowerCase())
+                        )
+                        .map((link) => (
+                            <div key={link.id} className={styles.contactRow}>
+                                <span className={styles.icon}>🔗</span>
+                                <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={styles.link}
+                                >
+                                    {link.label}
+                                </a>
+                            </div>
+                        ))}
+
                 </div>
 
-                {/* Boutons */}
+                {/* Actions */}
                 <div className={styles.actions}>
-                    <a
-                        href={`mailto:${speaker.email}`}
-                        className={styles.btnContact}
-                    >
-                        Contacter
-                    </a>
-                    <a
-                        href={`https://${speaker.linkedin}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={styles.btnLinkedin}
-                    >
-                        LinkedIn
-                    </a>
+                    {email && (
+                        <a
+                            href={`mailto:${email.url}`}
+                            className={styles.btnContact}
+                        >
+                            Contacter
+                        </a>
+                    )}
+                    {linkedin && (
+                        <a
+                            href={linkedin.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={styles.btnLinkedin}
+                        >
+                            LinkedIn
+                        </a>
+                    )}
                 </div>
 
             </div>

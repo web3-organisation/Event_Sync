@@ -1,19 +1,21 @@
-import {NextResponse} from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient;
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const speakers = await prisma.speaker.findMany();
+        const speakers = await prisma.speaker.findMany({
+            include: {
+                speakerLinks: true,
+            },
+        });
 
-        return NextResponse.json({ speakers });
+        return NextResponse.json(speakers);
+
     } catch (error) {
-        console.error(error);
+        console.error("Erreur:", error);
         return NextResponse.json(
-            { error: 'Failed to fetch speakers' },
+            { error: error.message },
             { status: 500 }
         );
     }
 }
-
