@@ -23,12 +23,11 @@ const SearchBar = ({
 
             <div className={styles.top}>
                 <span className={styles.label}>
-                    🔍 Rechercher un intervenant
                 </span>
 
                 {hasFilters && (
                     <span className={styles.resultBadge}>
-                        {resultCount} résultat{resultCount > 1 ? "s" : ""}
+                        {resultCount} speaker{resultCount > 1 ? "s" : ""} found
                     </span>
                 )}
             </div>
@@ -39,7 +38,7 @@ const SearchBar = ({
                 <div className={styles.inputWrapper}>
                     <input
                         type="text"
-                        placeholder="Nom, bio..."
+                        placeholder="Find Speaker..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className={styles.input}
@@ -62,7 +61,7 @@ const SearchBar = ({
                         className={styles.select}
                     >
                         <option value="all">
-                            Toutes les sessions ({sessions.length})
+                            All sessions ({sessions.length})
                         </option>
                         {sessions.map((s) => (
                             <option key={s.id} value={s.id}>

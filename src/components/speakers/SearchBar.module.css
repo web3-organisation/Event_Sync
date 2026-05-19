@@ -36,7 +36,7 @@
 /* ── Inputs ──────────────────────────────── */
 .row {
     display: flex;
-    gap: 12px;
+    gap: 2vw;
 }
 
 .inputWrapper {
@@ -56,7 +56,7 @@
 .input {
     width: 100%;
     padding: 12px 40px;
-    border-radius: 12px;
+    border-radius: 50px;
     border: 2px solid #e2e8f0;
     background: #f8fafc;
     font-size: 14px;

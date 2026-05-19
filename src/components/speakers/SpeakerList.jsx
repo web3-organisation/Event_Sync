@@ -15,7 +15,7 @@ const SpeakerList = ({ sessions }) => {
         (acc, s) => acc + s.speakers.length, 0
     );
 
-    // Filtrage
+    // Filter
     const query = search.toLowerCase();
 
     const filteredSessions = sessions
@@ -39,49 +39,43 @@ const SpeakerList = ({ sessions }) => {
     return (
         <div className={styles.page}>
             <div className={styles.container}>
+                <div className={styles.searchContainer}>
 
-                {/* Header */}
-                <div className={styles.header}>
-                    <h1 className={styles.title}>
-                        🎤 Nos Intervenants
-                    </h1>
-                    <p className={styles.subtitle}>
-                        Tous les speakers groupés par session
-                    </p>
+                {/* Searching speakers */}
+                    <div className={styles.searchBarContainer}>
+                        <SearchBar
+                            search={search}
+                            setSearch={setSearch}
+                            selectedSession={selectedSession}
+                            setSelectedSession={setSelectedSession}
+                            sessions={sessions}
+                            resultCount={resultCount}
+                        />
+                    </div>
+
+
+                    <div className={styles.stats}>
+                        <div className={styles.statCard}>
+                            <span className={styles.statLabel}>Sessions</span>
+                            <span className={styles.statValue}>
+                                {sessions.length}
+                            </span>
+
+                        </div>
+                        <div className={styles.statCard}>
+                            <span className={styles.statLabel}>Speakers</span>
+                            <span className={styles.statValue}>
+                                {totalSpeakers}
+                            </span>
+
+                        </div>
+                    </div>
                 </div>
 
-                {/* Stats */}
-                <div className={styles.stats}>
-                    <div className={styles.statCard}>
-                        <span className={styles.statIcon}>🗓️</span>
-                        <span className={styles.statValue}>
-                            {sessions.length}
-                        </span>
-                        <span className={styles.statLabel}>Sessions</span>
-                    </div>
-                    <div className={styles.statCard}>
-                        <span className={styles.statIcon}>🎤</span>
-                        <span className={styles.statValue}>
-                            {totalSpeakers}
-                        </span>
-                        <span className={styles.statLabel}>Intervenants</span>
-                    </div>
-                </div>
-
-                {/* Search */}
-                <SearchBar
-                    search={search}
-                    setSearch={setSearch}
-                    selectedSession={selectedSession}
-                    setSelectedSession={setSelectedSession}
-                    sessions={sessions}
-                    resultCount={resultCount}
-                />
-
-                {/* No results */}
+                {/* If case : No results */}
                 {filteredSessions.length === 0 && (
                     <div className={styles.noResults}>
-                        <p className={styles.noResultsIcon}>😕</p>
+                        <p className={styles.noResultsIcon}>Speakers not found</p>
                         <p className={styles.noResultsText}>
                             Aucun intervenant trouvé
                         </p>
