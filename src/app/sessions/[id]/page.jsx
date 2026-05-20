@@ -1,4 +1,5 @@
 import "../../css/session.css";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "../../lib/prisma";
@@ -100,7 +101,7 @@ function SpeakerAvatar({ speaker, size = "lg" }) {
   return (
     <div className={cls}>
       {speaker.photoUrl
-        ? <img src={speaker.photoUrl} alt={speaker.fullName} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} />
+        ? <Image src={speaker.photoUrl} alt={speaker.fullName} width={100} height={100} unoptimized style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} />
         : initials}
     </div>
   );
