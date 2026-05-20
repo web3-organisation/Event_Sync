@@ -1,0 +1,222 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+}
+
+.login-left {
+  padding: 40px;
+  background:
+    radial-gradient(circle at top right, var(--violet-glow), transparent 35%),
+    linear-gradient(135deg, var(--navy-light), var(--navy-mid));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  box-shadow: 0 16px 40px var(--violet-glow);
+}
+
+.login-brand h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.login-brand p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+
+.login-copy {
+  max-width: 480px;
+  padding: 26px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-mid);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--coral);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+
+.login-copy h2 {
+  margin: 0 0 12px;
+  font-size: 2rem;
+}
+
+.login-copy p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.login-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  min-width: 140px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.stat span {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.login-right {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-box {
+  margin: auto 0;
+  padding: 30px;
+  border-radius: var(--radius-xl);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.form-box h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: var(--text-primary);
+}
+
+.form-box p {
+  margin: 10px 0 0;
+  color: var(--text-secondary);
+}
+
+.login-form {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.login-form input {
+  height: 48px;
+  padding: 0 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.login-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.login-form input:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+}
+
+.submit-btn {
+  margin-top: 8px;
+  height: 50px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+@media (max-width: 900px) {
+  .login-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .login-left,
+  .login-right,
+  .form-box {
+    padding: 22px;
+  }
+
+  .login-copy h2,
+  .form-box h3 {
+    font-size: 1.5rem;
+  }
+}
