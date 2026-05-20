@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Bricolage_Grotesque, DM_Sans } from "next/font/googl
 import "./globals.css";
 import "./css/session.css";
 import Link from "next/link";
+import ThemeToggle from "./components/ThemeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,16 +29,19 @@ export const metadata = {
   description: "Gérez vos sessions favorites et posez vos questions en direct.",
 };
 
+
+
 function Header() {
   return (
     <header style={{ 
       padding: '20px 0', 
-      borderBottom: '1px solid rgba(255,255,255,0.05)',
-      background: 'rgba(10,10,15,0.8)',
+      borderBottom: '1px solid var(--border)',
+      background: 'var(--bg)',
       backdropFilter: 'blur(12px)',
       position: 'sticky',
       top: 0,
-      zIndex: 100
+      zIndex: 100,
+      transition: 'background 0.3s ease'
     }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -46,16 +50,17 @@ function Header() {
             fontFamily: 'var(--font-display)', 
             fontSize: '20px', 
             fontWeight: 800, 
-            color: '#fff',
+            color: 'var(--text-primary)',
             letterSpacing: '-0.02em'
           }}>
             Event<span style={{ color: '#7C3AED' }}>Sync</span>
           </span>
         </Link>
-        <nav style={{ display: 'flex', gap: '24px' }}>
-          <Link href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Événements</Link>
-          <Link href="/sessions" style={{ color: '#fff', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>Sessions</Link>
-          <Link href="/speakers" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Intervenants</Link>
+        <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+          <Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Événements</Link>
+          <Link href="/sessions" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>Sessions</Link>
+          <Link href="/speakers" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Intervenants</Link>
+          <ThemeToggle />
         </nav>
       </div>
     </header>
@@ -64,8 +69,24 @@ function Header() {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr" className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${dmSans.variable}`}>
-      <body style={{ margin: 0, padding: 0, backgroundColor: '#0A0A0F', color: '#fff' }}>
+    <html lang="fr" className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${dmSans.variable}`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var savedTheme = localStorage.getItem("theme");
+                  var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                  var initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+                  document.documentElement.setAttribute("data-theme", initialTheme);
+                } catch (e) {}
+              })();
+            `
+          }}
+        />
+      </head>
+      <body style={{ margin: 0, padding: 0, backgroundColor: 'var(--bg)', color: 'var(--text-primary)', transition: 'background 0.3s ease, color 0.3s ease' }}>
         <Header />
         <main>
           {children}
