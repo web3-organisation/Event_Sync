@@ -1,13 +1,14 @@
-// prisma/seed.ts
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: "postgresql://events_manager:123456@localhost:5432/events_synck_bd" });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // Admin
+
   const hash = await bcrypt.hash("admin123", 12);
   const admin = await prisma.admin.upsert({
     where: { email: "admin@eventsync.io" },
@@ -16,7 +17,7 @@ async function main() {
   });
   console.log("✅ Admin créé:", admin.email);
 
-  // Speakers
+
   const speaker1 = await prisma.speaker.create({
     data: {
       fullName: "Thomas Laurent",
@@ -45,7 +46,6 @@ async function main() {
   });
   console.log("✅ Speakers créés");
 
-  // Events
   const event1 = await prisma.event.create({
     data: {
       title: "TechConf Paris 2025",
@@ -84,7 +84,6 @@ async function main() {
   });
   console.log("✅ Events créés");
 
-  // Sessions event1
   const session1 = await prisma.session.create({
     data: {
       title: "Keynote : L'IA en 2025 — État des lieux",
@@ -127,7 +126,6 @@ async function main() {
     },
   });
 
-  // Questions pour session1
   await prisma.question.createMany({
     data: [
       { content: "Quels sont les risques des agents autonomes en production ?", authorName: "Alice D.", upvotes: 12, sessionId: session1.id },
@@ -136,7 +134,6 @@ async function main() {
     ],
   });
 
-  // Sessions event2
   await prisma.session.create({
     data: {
       title: "Construire un design system de zéro",
