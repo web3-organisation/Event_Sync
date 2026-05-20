@@ -1,142 +1,342 @@
 .page {
-  --background: #fafafa;
-  --foreground: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 80px 80px;
+  font-family: var(--font-body);
+}
 
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+/* Hero Container */
+.hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
   align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
+  margin-bottom: 48px;
+  box-shadow: 0 10px 30px var(--shadow);
+  transition: all 0.3s ease;
 }
 
-.main {
+.heroContent {
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.liveTag {
+  background-color: rgba(255, 46, 116, 0.12);
+  color: var(--ev-live);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.heroTitle {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.description {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 16px;
+}
+
+.btnPrimary {
+  background-color: var(--ev-primary);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px rgba(124, 92, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btnPrimary:hover {
+  background-color: #674ae0;
+  transform: translateY(-2px);
+}
+
+.btnSecondary {
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.btnSecondary:hover {
+  background-color: var(--border);
+  transform: translateY(-2px);
+}
+
+/* Featured Card (Right column) */
+.featuredCard {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 280px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+}
+
+.featuredImage {
   width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.intro {
+.featuredOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(8, 16, 32, 0.95) 0%, rgba(8, 16, 32, 0.6) 60%, transparent 100%);
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  gap: 8px;
+  color: white;
+}
+
+.featuredBadge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: var(--ev-live);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.featuredTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.featuredMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Sessions Grid Section */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.seeAll {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ev-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.seeAll:hover {
+  text-decoration: underline;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
 
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
+/* Session Card */
+.sessionCard {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
 }
 
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
+.sessionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow);
+  border-color: var(--ev-primary);
+}
+
+.cardHeader {
+  position: relative;
+  height: 120px;
+  background: linear-gradient(135deg, var(--ev-primary) 0%, var(--ev-primary-lt) 100%);
+  overflow: hidden;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+
+.sessionCard:hover .cardImage {
+  transform: scale(1.05);
+}
+
+.cardHeaderBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: var(--ev-live);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.cardBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.8rem;
+}
+
+.cardTimeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
   color: var(--text-secondary);
 }
 
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
+.cardFooter {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
-}
-
-.ctas a {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
-}
-
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
   gap: 8px;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.speakerAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--ev-primary-lt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  overflow: hidden;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
+.speakerAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
+.speakerName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-
+@media (max-width: 768px) {
   .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+    padding: 30px 20px;
+  }
+  .hero {
+    padding: 24px;
+  }
+  .heroTitle {
+    font-size: 2rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
   }
 }
