@@ -14,7 +14,6 @@ model Admin {
   passwordHash String   @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  adminQuestions AdminQuestion[]
   adminSessions  AdminSession[]
   adminSpeakers  AdminSpeaker[]
   adminEvents    AdminEvent[]
@@ -115,25 +114,13 @@ model Question {
   sessionId  String   @map("session_id")
 
   session        Session         @relation(fields: [sessionId], references: [id])
-  adminQuestions AdminQuestion[]
 
   @@map("questions")
 }
 
-model AdminQuestion {
-  adminId    String @map("id_admins")
-  questionId String @map("id_questions")
-
-  admin    Admin    @relation(fields: [adminId], references: [id])
-  question Question @relation(fields: [questionId], references: [id])
-
-  @@id([adminId, questionId])
-  @@map("admin_question")
-}
-
 model AdminSession {
   adminId   String @map("id_admin")
-  sessionId String @map("id_sessions")
+  sessionId String @map("id_session")
 
   admin   Admin   @relation(fields: [adminId], references: [id])
   session Session @relation(fields: [sessionId], references: [id])
@@ -155,7 +142,7 @@ model AdminSpeaker {
 
 model AdminRoom {
   adminId String @map("id_admin")
-  roomId  String @map("id_rooms")
+  roomId  String @map("id_room")
 
   admin Admin @relation(fields: [adminId], references: [id])
   room  Room  @relation(fields: [roomId], references: [id])
