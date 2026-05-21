@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono, Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import "./globals.css";
-import "./css/session.css";
 import Link from "next/link";
 import ThemeToggle from "./components/ThemeToggle";
 
