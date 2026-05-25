@@ -6,7 +6,6 @@ import { Calendar, MapPin, Users, ChevronRight, Zap } from "lucide-react";
 import type { EventSummary } from "@/lib/types";
 import { formatEventDate } from "@/lib/session-utils";
 
-// Assign a gradient accent per event index (cycling through palette)
 const ACCENTS = [
   { from: "var(--violet)", to: "var(--sky)", tag: "#6C63FF" },
   { from: "var(--teal)", to: "var(--green)", tag: "#00D4AA" },
