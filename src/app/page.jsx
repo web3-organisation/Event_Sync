@@ -1,5 +1,10 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  redirect("/sessions/1");
+  const condition = true; // remplacez par votre logique
+  if (condition) {
+    redirect("/events");
+  } else {
+    redirect("/sessions/1");
+  }
 }
