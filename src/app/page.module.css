@@ -5,7 +5,6 @@
   font-family: var(--font-body);
 }
 
-/* Hero Container */
 .hero {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -339,4 +338,200 @@
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+.noSessions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.noSessionsIcon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.noSessionsText {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.noSessionsLink {
+  color: var(--ev-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.noSessionsLink:hover {
+  text-decoration: underline;
+  color: var(--ev-primary-lt);
+}
+
+.featuredCardEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  height: 280px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 24px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(8, 16, 32, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 550px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-primary);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.closeBtn:hover {
+  color: var(--ev-live);
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputRow {
+  display: flex;
+  gap: 16px;
+}
+
+.inputRow .inputGroup {
+  flex: 1;
+}
+
+.modalLabel {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.modalInput, .modalTextarea {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.modalInput:focus, .modalTextarea:focus {
+  outline: none;
+  border-color: var(--ev-primary);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
+}
+
+.modalTextarea {
+  resize: vertical;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.modalError {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--ev-live);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.modalSuccess {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--ev-success);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

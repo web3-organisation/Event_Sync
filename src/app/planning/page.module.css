@@ -205,3 +205,97 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Event metadata row in planning hero */
+.eventMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.eventMetaItem {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Empty state for planning */
+.noSessions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.noSessionsIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.noSessionsTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.noSessionsText {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 24px;
+  max-width: 460px;
+  line-height: 1.6;
+}
+
+.noSessionsLink {
+  color: var(--ev-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.noSessionsLink:hover {
+  text-decoration: underline;
+}
+
+.deleteButton {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ev-danger);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 4px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.deleteButton:hover {
+  background: var(--ev-danger);
+  color: #ffffff;
+  border-color: var(--ev-danger);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.deleteButton:active {
+  transform: translateY(0);
+}

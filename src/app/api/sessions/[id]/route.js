@@ -1,72 +1,30 @@
 import prisma from "@/lib/prisma";
 
-/**
- * GET /api/sessions/[id]
- * Returns a single session with its room, speakers, event, and questions.
- */
-export async function GET(request, { params }) {
+export async function DELETE(request, { params }) {
   const { id } = await params;
-
   try {
-    const session = await prisma.session.findUnique({
-      where: { id },
-      include: {
-        room: true,
-        event: {
-          select: { id: true, title: true, location: true, startDate: true, endDate: true },
-        },
-        sessionSpeakers: {
-          include: {
-            speaker: {
-              select: {
-                id: true,
-                fullName: true,
-                bio: true,
-                photoUrl: true,
-                speakerLinks: { select: { label: true, url: true } },
-              },
-            },
-          },
-        },
-        questions: {
-          orderBy: { upvotes: "desc" },
-          select: {
-            id: true,
-            content: true,
-            authorName: true,
-            upvotes: true,
-            createdAt: true,
-          },
-        },
-      },
+    const questions = await prisma.question.findMany({
+      where: { sessionId: id },
+      select: { id: true },
     });
-
-    if (!session) {
-      return Response.json({ error: "Session introuvable." }, { status: 404 });
+    const questionIds = questions.map((q) => q.id);
+    if (questionIds.length) {
+      await prisma.adminQuestion.deleteMany({ where: { questionId: { in: questionIds } } });
+      await prisma.question.deleteMany({ where: { id: { in: questionIds } } });
     }
 
-    const formatted = {
-      id: session.id,
-      title: session.title,
-      description: session.description ?? null,
-      startTime: session.startTime.toISOString(),
-      endTime: session.endTime.toISOString(),
-      capacity: session.capacity ?? null,
-      room: session.room.name,
-      event: session.event,
-      speakers: session.sessionSpeakers.map((ss) => ss.speaker),
-      questions: session.questions.map((q) => ({
-        ...q,
-        createdAt: q.createdAt.toISOString(),
-      })),
-    };
+    await prisma.adminSession.deleteMany({ where: { sessionId: id } });
+    await prisma.sessionSpeaker.deleteMany({ where: { sessionId: id } });
+    await prisma.session.delete({
+      where: { id }
+    });
 
-    return Response.json(formatted);
+    return new Response(null, { status: 204 });
   } catch (error) {
-    console.error(`[GET /api/sessions/${id}] Error:`, error);
-    return Response.json(
-      { error: "Erreur serveur." },
-      { status: 500 }
-    );
+    console.error(error);
+    return new Response(JSON.stringify({ error: "Impossible de supprimer la session." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }

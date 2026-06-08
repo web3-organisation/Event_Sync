@@ -1,155 +1,222 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import SessionCard from "@/app/components/SessionCard";
+import AddSessionModal from "@/app/components/AddSessionModal";
 
-const MOCK_SESSIONS = [
-  {
-    id: "1",
-    title: "Introduction à l'Agentic AI et Web3",
-    startTime: new Date().toISOString(),
-    endTime: new Date(Date.now() + 5400000).toISOString(),
-    room: "Grand Amphithéâtre",
-    speakers: ["Alice Nakamoto"],
-  },
-  {
-    id: "2",
-    title: "L'avenir du Web 3.0",
-    startTime: new Date(Date.now() + 7200000).toISOString(),
-    endTime: new Date(Date.now() + 10800000).toISOString(),
-    room: "Salle 102",
-    speakers: ["Alice Smith"],
-  },
-  {
-    id: "3",
-    title: "Design Systems Modernes",
-    startTime: new Date().toISOString(),
-    endTime: new Date(Date.now() + 3600000).toISOString(),
-    room: "Salle 102",
-    speakers: ["Bob Martin"],
+export const dynamic = "force-dynamic";
+
+async function deleteSessionsById(sessionIds) {
+  if (!sessionIds.length) return;
+
+  const questions = await prisma.question.findMany({
+    where: { sessionId: { in: sessionIds } },
+    select: { id: true },
+  });
+  const questionIds = questions.map((q) => q.id);
+  if (questionIds.length) {
+    await prisma.adminQuestion.deleteMany({ where: { questionId: { in: questionIds } } });
+    await prisma.question.deleteMany({ where: { id: { in: questionIds } } });
   }
-];
+
+  await prisma.adminSession.deleteMany({ where: { sessionId: { in: sessionIds } } });
+  await prisma.sessionSpeaker.deleteMany({ where: { sessionId: { in: sessionIds } } });
+  await prisma.session.deleteMany({ where: { id: { in: sessionIds } } });
+}
+
+async function deleteEventsByIds(eventIds) {
+  if (!eventIds.length) return;
+
+  const sessions = await prisma.session.findMany({
+    where: { eventId: { in: eventIds } },
+    select: { id: true },
+  });
+  await deleteSessionsById(sessions.map((s) => s.id));
+
+  const rooms = await prisma.room.findMany({
+    where: { eventId: { in: eventIds } },
+    select: { id: true },
+  });
+  const roomIds = rooms.map((r) => r.id);
+  if (roomIds.length) {
+    await prisma.adminRoom.deleteMany({ where: { roomId: { in: roomIds } } });
+    await prisma.room.deleteMany({ where: { id: { in: roomIds } } });
+  }
+
+  await prisma.adminEvent.deleteMany({ where: { eventId: { in: eventIds } } });
+  await prisma.event.deleteMany({ where: { id: { in: eventIds } } });
+}
+
+async function deleteEvent(formData) {
+  "use server";
+  const id = formData.get("id");
+  if (!id) return;
+  try {
+    await deleteEventsByIds([id]);
+  } catch (err) {
+    console.error(err);
+  }
+  redirect("/planning");
+}
 
 async function getSessions() {
-  const { default: prisma } = await import("@/lib/prisma");
+  try {
+    const pastEvents = await prisma.event.findMany({
+      where: { endDate: { lt: new Date() } },
+      select: { id: true },
+    });
+    const pastEventIds = pastEvents.map((e) => e.id);
+    if (pastEventIds.length) {
+      await deleteEventsByIds(pastEventIds);
+    }
+  } catch (cleanupError) {
+    console.error(cleanupError);
+  }
+
+  try {
+    const pastSessions = await prisma.session.findMany({
+      where: { endTime: { lt: new Date() } },
+      select: { id: true },
+    });
+    await deleteSessionsById(pastSessions.map((s) => s.id));
+  } catch (cleanupError) {
+    console.error(cleanupError);
+  }
+
   try {
     const sessions = await prisma.session.findMany({
       orderBy: { startTime: "asc" },
       include: {
         room: true,
-        sessionSpeakers: {
-          include: {
-            speaker: {
-              select: { fullName: true },
-            },
-          },
-        },
+        event: { select: { title: true } },
+        sessionSpeakers: { include: { speaker: { select: { fullName: true } } } },
       },
     });
-
-    if (sessions.length === 0) {
-      return MOCK_SESSIONS;
-    }
-
     return sessions.map((s) => ({
       id: s.id,
       title: s.title,
       startTime: s.startTime.toISOString(),
       endTime: s.endTime.toISOString(),
       room: s.room.name,
+      eventTitle: s.event?.title || null,
       speakers: s.sessionSpeakers.map((ss) => ss.speaker.fullName),
     }));
   } catch (error) {
-    console.error("Impossible de charger le planning depuis Prisma:", error.message);
-    return MOCK_SESSIONS;
+    console.error(error);
+    return [];
   }
 }
 
-function formatTime(dateString) {
+async function getLatestEvent() {
   try {
-    return new Date(dateString).toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
+    return await prisma.event.findFirst({ orderBy: { createdAt: "desc" } });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+function formatDate(dateString) {
+  try {
+    return new Date(dateString).toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
-  } catch (e) {
-    return "--:--";
+  } catch {
+    return "";
   }
 }
 
 export default async function SchedulePage() {
-  const sessions = await getSessions();
+  const [sessions, event] = await Promise.all([getSessions(), getLatestEvent()]);
   const rooms = [...new Set(sessions.map((s) => s.room))];
 
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
         <span className={`${styles.badge} ${styles.badgeLive}`}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--ev-success)', display: 'inline-block' }} className="live-pulse"></span>
+          <span
+            className="live-pulse"
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "50%",
+              background: "var(--ev-success)",
+              display: "inline-block",
+            }}
+          />
           Planning connecté
         </span>
-        <h1 className={styles.title}>Planning global</h1>
+
+        <h1 className={styles.title}>{event ? event.title : "Planning global"}</h1>
+
+        {event && (
+          <div className={styles.eventMeta}>
+            {event.startDate && event.endDate && (
+              <span className={styles.eventMetaItem}>
+                📅 {formatDate(event.startDate)} → {formatDate(event.endDate)}
+              </span>
+            )}
+            {event.location && (
+              <span className={styles.eventMetaItem}>📍 {event.location}</span>
+            )}
+            <span className={styles.eventMetaItem}>
+              🏛️ {rooms.length} salle{rooms.length !== 1 ? "s" : ""} ·{" "}
+              {sessions.length} session{sessions.length !== 1 ? "s" : ""}
+            </span>
+
+            <AddSessionModal eventId={event.id} />
+
+            <form action={deleteEvent}>
+              <input type="hidden" name="id" value={event.id} />
+              <button type="submit" className={styles.deleteButton}>
+                🗑️ Supprimer l'événement
+              </button>
+            </form>
+          </div>
+        )}
+
         <p className={styles.subtitle}>
-          Vue multi-salles avec sessions en cours, horaires et intervenants en temps réel.
+          {event?.description ||
+            "Vue multi-salles avec sessions en cours, horaires et intervenants en temps réel."}
         </p>
       </section>
 
-      <section className={styles.roomsGrid}>
-        {rooms.map((room) => (
-          <div key={room} className={styles.roomCard}>
-            <h2 className={styles.roomTitle}>{room}</h2>
-
-            <div className={styles.sessionList}>
-              {sessions
-                .filter((session) => session.room === room)
-                .map((session) => {
-                  const now = new Date();
-                  const start = new Date(session.startTime);
-                  const end = new Date(session.endTime);
-                  const live = start <= now && end >= now;
-                  const upcoming = start > now;
-                  
-                  let statusLabel = "Terminé";
-                  let badgeStyleClass = styles.done;
-                  if (live) {
-                    statusLabel = "Live";
-                    badgeStyleClass = styles.live;
-                  } else if (upcoming) {
-                    statusLabel = "À venir";
-                    badgeStyleClass = styles.upcoming;
-                  }
-
-                  return (
-                    <article key={session.id} className={styles.sessionCard}>
-                      <div className={styles.sessionHeader}>
-                        <div>
-                          <h3 className={styles.sessionTitle}>{session.title}</h3>
-                          <div className={styles.sessionTime}>
-                            <span>🕐</span> {formatTime(session.startTime)} - {formatTime(session.endTime)}
-                          </div>
-                        </div>
-
-                        <span className={`${styles.cardBadge} ${badgeStyleClass}`}>
-                          {live && <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'currentColor', display: 'inline-block' }} className="live-pulse"></span>}
-                          {statusLabel}
-                        </span>
-                      </div>
-
-                      <div className={styles.speakers}>
-                        {session.speakers && session.speakers.length > 0 
-                          ? `Intervenants : ${session.speakers.join(", ")}`
-                          : "Pas d'intervenants renseignés"}
-                      </div>
-
-                      <div style={{ marginTop: '12px' }}>
-                        <button className={styles.btnSecondary} type="button">
-                          Détails
-                        </button>
-                      </div>
-                    </article>
-                  );
-                })}
+      {sessions.length === 0 ? (
+        <div className={styles.noSessions}>
+          <span className={styles.noSessionsIcon}>📋</span>
+          <h2 className={styles.noSessionsTitle}>
+            {event
+              ? `Aucune session pour « ${event.title} »`
+              : "Aucune session programmée"}
+          </h2>
+          <p className={styles.noSessionsText}>
+            {event
+              ? "Cet événement n'a pas encore de sessions. Les sessions apparaîtront ici une fois créées."
+              : "Créez d'abord un événement depuis la page d'accueil, puis ajoutez des sessions."}
+          </p>
+          <Link href="/" className={styles.noSessionsLink}>
+            ← Retour à l'accueil
+          </Link>
+        </div>
+      ) : (
+        <section className={styles.roomsGrid}>
+          {rooms.map((room) => (
+            <div key={room} className={styles.roomCard}>
+              <h2 className={styles.roomTitle}>{room}</h2>
+              <div className={styles.sessionList}>
+                {sessions
+                  .filter((session) => session.room === room)
+                  .map((session) => (
+                    <SessionCard key={session.id} session={session} />
+                  ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </section>
+          ))}
+        </section>
+      )}
     </main>
   );
 }

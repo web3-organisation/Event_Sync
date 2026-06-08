@@ -18,7 +18,6 @@ export default function LoginPage() {
       <div className={styles.loginCard}>
         <div className={styles.header}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
-            {/* Thunderbolt logo */}
             <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style={{ color: '#F59E0B', marginRight: '8px' }}>
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
             </svg>
