@@ -60,18 +60,19 @@ const SpeakerList = ({ sessions }) => {
             <span className={styles.statValue}>
                 {sessions.length}<em>sessions</em>
             </span>
-                                <span className={styles.statLabel}>au programme</span>
+                                <span className={styles.statLabel}>SCHEDULED</span>
                             </div>
                             <div className={styles.statDivider} />
                             <div className={styles.statCard}>
             <span className={styles.statValue}>
                 {totalSpeakers}<em>speakers</em>
             </span>
-                                <span className={styles.statLabel}>enregistrés</span>
+                                <span className={styles.statLabel}>CONFIRMED</span>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 {/* If case : No results */}
                 {filteredSessions.length === 0 && (
@@ -103,8 +104,10 @@ const SpeakerList = ({ sessions }) => {
                     ))}
                 </div>
 
+
             </div>
         </div>
+
     );
 };
 
