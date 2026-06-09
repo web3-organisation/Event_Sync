@@ -55,19 +55,20 @@ const SpeakerList = ({ sessions }) => {
 
 
                     <div className={styles.stats}>
-                        <div className={styles.statCard}>
-                            <span className={styles.statLabel}>Sessions</span>
-                            <span className={styles.statValue}>
-                                {sessions.length}
-                            </span>
-
-                        </div>
-                        <div className={styles.statCard}>
-                            <span className={styles.statLabel}>Speakers</span>
-                            <span className={styles.statValue}>
-                                {totalSpeakers}
-                            </span>
-
+                        <div className={styles.statsRow}>
+                            <div className={styles.statCard}>
+            <span className={styles.statValue}>
+                {sessions.length}<em>sessions</em>
+            </span>
+                                <span className={styles.statLabel}>au programme</span>
+                            </div>
+                            <div className={styles.statDivider} />
+                            <div className={styles.statCard}>
+            <span className={styles.statValue}>
+                {totalSpeakers}<em>speakers</em>
+            </span>
+                                <span className={styles.statLabel}>enregistrés</span>
+                            </div>
                         </div>
                     </div>
                 </div>

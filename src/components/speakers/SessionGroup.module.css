@@ -1,8 +1,9 @@
 /* ── Groupe ── */
 .group {
+    margin-top: 5%;
     border-radius: 16px;
     border: 1px solid #1E2A42;
-    width: 50%;
+    width: 80%;
     overflow: hidden;
     margin-bottom: 32px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
