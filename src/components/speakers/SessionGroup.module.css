@@ -194,6 +194,7 @@
     margin-bottom: 2.5rem;
 }
 
+
 /* ── Header ── */
 .sessionHeader {
     display: flex;
@@ -218,16 +219,17 @@
 }
 
 .sessionTime {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: #00D4FF;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
     white-space: nowrap;
+
 }
 
 .sessionTitle {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     color: #E8EDF5;
 }
@@ -239,7 +241,7 @@
     margin-left: auto;
 }
 
-.metaPill {
+.location {
     font-size: 11px;
     color: #6B7FA3;
     display: flex;

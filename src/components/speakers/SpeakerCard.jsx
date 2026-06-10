@@ -215,8 +215,8 @@ export default function SpeakerCard({
                         }
                     >
                         {showBio
-                            ? "Voir moins ▲"
-                            : "Voir plus ▼"}
+                            ? "See less ▲"
+                            : "See more ▼"}
                     </button>
                 </div>
             )}

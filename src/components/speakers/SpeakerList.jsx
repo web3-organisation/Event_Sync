@@ -236,3 +236,4 @@ const SpeakerList = ({ sessions }) => {
 };
 
 export default SpeakerList;
+

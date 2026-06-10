@@ -112,6 +112,20 @@ import styles from "./SessionGroup.module.css";
 
 const SessionGroup = ({ session, searchQuery }) => {
   const count = session.speakers.length;
+    const formatTime = (ts) => {
+        if (!ts) return "";
+
+        // cas Firebase Timestamp
+        const date =
+            ts.seconds
+                ? new Date(ts.seconds * 1000)
+                : new Date(ts);
+
+        return date.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
 
   return (
       <div className={styles.sessionBlock}>
@@ -119,18 +133,22 @@ const SessionGroup = ({ session, searchQuery }) => {
         {/* ── HEADER ── */}
         <div className={styles.sessionHeader}>
           {session.isLive && <span className={styles.liveDot} />}
-          <span className={styles.sessionTime}>{session.time}</span>
-          <span className={styles.sessionTitle}>{session.name}</span>
+          <span className={styles.sessionTime}>
+              {formatTime(session.startTime)} - {formatTime(session.endTime)}
+          </span>
+
+
+          <span className={styles.sessionTitle}>
+              {session.title}
+          </span>
           <div className={styles.sessionMeta}>
             {session.isLive && (
                 <span className={styles.liveBadge}>Live</span>
             )}
-            {session.location && (
-                <span className={styles.metaPill}>📍 {session.location}</span>
-            )}
-            <span className={styles.metaPill}>
-            🎤 {count} intervenant{count > 1 ? "s" : ""}
-          </span>
+              {session.room && (
+                  <span className={styles.location}>📍 {session.room}</span>
+              )}
+
           </div>
         </div>
 
