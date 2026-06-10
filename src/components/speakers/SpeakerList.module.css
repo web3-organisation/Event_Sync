@@ -90,7 +90,7 @@
 }
 
 .noResultsIcon {
-    font-size: 12px;
+    font-size: 50px;
     font-weight: 600;
     color: #4B5E7A;
     text-transform: uppercase;
@@ -99,10 +99,18 @@
 }
 
 .noResultsText {
-    font-size: 20px;
+    font-size: 60px;
     color: #E8EDF5;
+    margin-bottom: 25px;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.noResultsScuse {
+    font-size: 20px;
+    color: #1E2A42;
     margin-bottom: 28px;
     font-family: 'Space Grotesk', sans-serif;
+
 }
 
 .resetBtn {
