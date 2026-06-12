@@ -1,9 +1,93 @@
 
+/*!* ── Session block ── *!*/
+/*.sessionBlock {*/
+/*    margin-bottom: 2.5rem;*/
+/*}*/
+
+
+/*!* ── Header ── *!*/
+/*.sessionHeader {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 12px;*/
+/*    margin-bottom: 14px;*/
+/*    flex-wrap: wrap;*/
+/*}*/
+
+/*.liveDot {*/
+/*    width: 7px;*/
+/*    height: 7px;*/
+/*    border-radius: 50%;*/
+/*    background: #EF4444;*/
+/*    flex-shrink: 0;*/
+/*    animation: pulse 1.2s infinite;*/
+/*}*/
+
+/*@keyframes pulse {*/
+/*    0%, 100% { opacity: 1; }*/
+/*    50%       { opacity: 0.35; }*/
+/*}*/
+
+/*.sessionTime {*/
+/*    font-size: 13px;*/
+/*    font-weight: 600;*/
+/*    color: #00D4FF;*/
+/*    font-variant-numeric: tabular-nums;*/
+/*    letter-spacing: 0.02em;*/
+/*    white-space: nowrap;*/
+
+/*}*/
+
+/*.sessionTitle {*/
+/*    font-size: 18px;*/
+/*    font-weight: 600;*/
+/*    color: #E8EDF5;*/
+/*}*/
+
+/*.sessionMeta {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 8px;*/
+/*    margin-left: auto;*/
+/*}*/
+
+/*.location {*/
+/*    font-size: 11px;*/
+/*    color: #6B7FA3;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 4px;*/
+/*}*/
+
+/*.liveBadge {*/
+/*    font-size: 10px;*/
+/*    font-weight: 700;*/
+/*    letter-spacing: 0.07em;*/
+/*    text-transform: uppercase;*/
+/*    color: #EF4444;*/
+/*    border: 1px solid rgba(239, 68, 68, 0.3);*/
+/*    padding: 2px 8px;*/
+/*    border-radius: 100px;*/
+/*    background: rgba(239, 68, 68, 0.08);*/
+/*}*/
+
+/*.sep {*/
+/*    height: 1px;*/
+/*    background: #1E2A42;*/
+/*    margin-bottom: 14px;*/
+/*}*/
+
+/*!* ── Grid ── *!*/
+/*.grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));*/
+/*    gap: 8px;*/
+/*}*/
+
 /* ── Session block ── */
 .sessionBlock {
     margin-bottom: 2.5rem;
 }
-
 
 /* ── Header ── */
 .sessionHeader {
@@ -18,7 +102,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #EF4444;
+    background: var(--ev-danger);
     flex-shrink: 0;
     animation: pulse 1.2s infinite;
 }
@@ -31,17 +115,16 @@
 .sessionTime {
     font-size: 13px;
     font-weight: 600;
-    color: #00D4FF;
+    color: var(--ev-primary);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
     white-space: nowrap;
-
 }
 
 .sessionTitle {
     font-size: 18px;
     font-weight: 600;
-    color: #E8EDF5;
+    color: var(--ev-dark);
 }
 
 .sessionMeta {
@@ -64,16 +147,16 @@
     font-weight: 700;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: #EF4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--ev-danger);
+    border: 1px solid rgba(255,107,107,0.3);
     padding: 2px 8px;
     border-radius: 100px;
-    background: rgba(239, 68, 68, 0.08);
+    background: rgba(255,107,107,0.08);
 }
 
 .sep {
     height: 1px;
-    background: #1E2A42;
+    background: var(--ev-border);
     margin-bottom: 14px;
 }
 
