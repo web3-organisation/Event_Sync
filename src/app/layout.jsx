@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Bricolage_Grotesque, DM_Sans } from "next/font/googl
 import "./globals.css";
 import "./css/session.css";
 import Link from "next/link";
+import Image from "next/image";
 import ThemeToggle from "./components/ThemeToggle";
 
 const geistSans = Geist({
@@ -44,17 +45,8 @@ function Header() {
       transition: 'background 0.3s ease'
     }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '24px' }}>⚡</span>
-          <span style={{ 
-            fontFamily: 'var(--font-display)', 
-            fontSize: '20px', 
-            fontWeight: 800, 
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em'
-          }}>
-            Event<span style={{ color: '#7C3AED' }}>Sync</span>
-          </span>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', position: 'relative', width: '225px', height: '30px' }}>
+          <Image src="/logo.png" alt="EventSync Logo" width={450} height={300} priority style={{ height: '150px', width: 'auto', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }} />
         </Link>
         <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
           <Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Événements</Link>
