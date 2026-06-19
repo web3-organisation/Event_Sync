@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./SearchBar.module.css";
+import Reveal from "../ui/Reveal";
 
 const SearchBar = ({
                        search,
@@ -19,6 +20,7 @@ const SearchBar = ({
     };
 
     return (
+        <Reveal>
         <div className={styles.wrapper}>
 
             <div className={styles.top}>
@@ -86,6 +88,7 @@ const SearchBar = ({
             )}
 
         </div>
+            </Reveal>
     );
 };
 

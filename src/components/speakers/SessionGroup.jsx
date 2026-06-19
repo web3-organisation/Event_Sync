@@ -2,6 +2,7 @@
 
 import SpeakerCard from "./SpeakerCard";
 import styles from "./SessionGroup.module.css";
+import Reveal from "../ui/Reveal";
 
 const SessionGroup = ({ session, searchQuery }) => {
   const count = session.speakers.length;
@@ -21,6 +22,7 @@ const SessionGroup = ({ session, searchQuery }) => {
     };
 
   return (
+      <Reveal>
       <div className={styles.sessionBlock}>
 
         {/* ── HEADER ── */}
@@ -59,6 +61,7 @@ const SessionGroup = ({ session, searchQuery }) => {
         </div>
 
       </div>
+      </Reveal>
   );
 };
 
