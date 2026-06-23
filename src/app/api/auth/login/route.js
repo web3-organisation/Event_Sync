@@ -12,10 +12,11 @@ export async function POST(req) {
     );
   }
 
-  const adminEmail   = process.env.ADMIN_EMAIL?.toLowerCase();
-  const adminPwdHash = process.env.ADMIN_PASSWORD_HASH;
+  const adminEmail    = process.env.ADMIN_EMAIL?.toLowerCase();
+  const adminPwdHash  = process.env.ADMIN_PASSWORD_HASH;
+  const dummyHash     = process.env.ADMIN_DUMMY_HASH;
 
-  if (!adminEmail || !adminPwdHash) {
+  if (!adminEmail || !adminPwdHash || !dummyHash) {
     return NextResponse.json(
       { error: "Erreur de configuration serveur." },
       { status: 500 }
@@ -25,9 +26,7 @@ export async function POST(req) {
   const emailMatch    = email.toLowerCase() === adminEmail;
   const passwordMatch = await bcrypt.compare(
     password,
-    emailMatch
-      ? adminPwdHash
-      : "\$2b\$12\$yC.hyRfwH3GPlObDBsithOaq06Aqm55OxVrKkUriAOD7PJVDYqGWy"
+    emailMatch ? adminPwdHash : dummyHash
   );
 
   if (!emailMatch || !passwordMatch) {
