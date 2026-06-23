@@ -1,7 +1,7 @@
 // app/api/sessions/[id]/route.js
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withLiveStatus } from "@/lib/session-utils";
+import { prisma } from "../../../lib/prisma";
+import { withLiveStatus } from "../../../lib/session-utils";
 
 export async function GET(_req, { params }) {
   const { id } = params;

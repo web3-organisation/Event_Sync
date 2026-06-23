@@ -1,36 +1,26 @@
-// lib/auth.js
-// JWT utilitaires — jose (Edge Runtime compatible, pas Node-only)
-// Utilisé par : middleware.js, app/login/actions.js, app/admin/...
 
-import { SignJWT, jwtVerify } from "jose";
+import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "eventsync_admin_token";
 const EXPIRY      = "8h"; // durée de session (journée de travail)
 
-// ── Clé secrète ──────────────────────────────
-// jose attend un Uint8Array
 function getSecret() {
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error("JWT_SECRET manquant dans .env.local");
-  return new TextEncoder().encode(secret);
+  return secret;
 }
 
 // ── Signer un token ───────────────────────────
-export async function signToken(payload) {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(EXPIRY)
-    .sign(getSecret());
+export function signToken(payload) {
+  return jwt.sign(payload, getSecret(), { expiresIn: EXPIRY });
 }
 
 // ── Vérifier un token ─────────────────────────
 // Retourne le payload décodé, ou null si invalide / expiré
-export async function verifyToken(token) {
+export function verifyToken(token) {
   try {
-    const { payload } = await jwtVerify(token, getSecret());
-    return payload;
+    return jwt.verify(token, getSecret());
   } catch {
     return null;
   }
