@@ -15,7 +15,6 @@ import {
   CheckCircle,
   Calendar,
 } from "lucide-react";
-import type { SessionDetail, Question } from "@/lib/types";
 import {
   formatTimeRange,
   formatEventDate,
@@ -23,26 +22,26 @@ import {
 } from "@/lib/session-utils";
 
 export default function SessionDetailPage() {
-  const { id: eventId, sessionId } = useParams<{ id: string; sessionId: string }>();
-  const [session, setSession] = useState<SessionDetail | null>(null);
+  const { id: eventId, sessionId } = useParams();
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   // Q&A state
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [upvotedIds, setUpvotedIds] = useState<Set<string>>(new Set());
-  const pollRef = useRef<NodeJS.Timeout | null>(null);
+  const [upvotedIds, setUpvotedIds] = useState(new Set());
+  const pollRef = useRef(null);
 
   const fetchQuestions = useCallback(async () => {
     if (!sessionId) return;
     try {
       const r = await fetch(`/api/sessions/${sessionId}/questions`);
       if (r.ok) {
-        const data: Question[] = await r.json();
+        const data = await r.json();
         setQuestions(data);
       }
     } catch {}
@@ -81,11 +80,11 @@ export default function SessionDetailPage() {
     try {
       const r = await fetch(`/api/sessions/${sessionId}/questions`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ content: newQuestion.trim(), authorName: authorName.trim() || undefined }),
       });
       if (r.ok) {
-        const created: Question = await r.json();
+        const created = await r.json();
         setQuestions((prev) => [created, ...prev]);
         setNewQuestion("");
         setSubmitSuccess(true);
@@ -95,12 +94,12 @@ export default function SessionDetailPage() {
     setSubmitting(false);
   }
 
-  async function handleUpvote(questionId: string) {
+  async function handleUpvote(questionId) {
     if (upvotedIds.has(questionId)) return;
     try {
       const r = await fetch(`/api/questions/${questionId}/upvote`, { method: "PATCH" });
       if (r.ok) {
-        const updated: Question = await r.json();
+        const updated = await r.json();
         setQuestions((prev) =>
           prev
             .map((q) => (q.id === questionId ? updated : q))
@@ -354,19 +353,6 @@ function QASection({
   upvotedIds,
   onSubmit,
   onUpvote,
-}: {
-  questions: Question[];
-  isLive: boolean;
-  sessionStatus: "live" | "upcoming" | "ended";
-  newQuestion: string;
-  setNewQuestion: (v: string) => void;
-  authorName: string;
-  setAuthorName: (v: string) => void;
-  submitting: boolean;
-  submitSuccess: boolean;
-  upvotedIds: Set<string>;
-  onSubmit: () => void;
-  onUpvote: (id: string) => void;
 }) {
   const canAsk = isLive;
 
@@ -548,7 +534,7 @@ function QASection({
   );
 }
 
-function MetaChip({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+function MetaChip({ icon, children }) {
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "rgba(248,249,255,0.65)", fontSize: "0.85rem" }}>
       {icon}

@@ -35,7 +35,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/events/[id]/sessions/[sessionId]/page.jsx", "src/app/events/[id]/page.jsx", "src/app/events/layout.jsx", "src/app/events/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

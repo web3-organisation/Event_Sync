@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Calendar, MapPin, Users, ChevronRight, Zap } from "lucide-react";
-import type { EventSummary } from "@/lib/types";
 import { formatEventDate } from "@/lib/session-utils";
 
 const ACCENTS = [
@@ -15,9 +14,9 @@ const ACCENTS = [
 ];
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<EventSummary[]>([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch("/api/events")
@@ -229,13 +228,13 @@ export default function EventsPage() {
                   transition: "transform 0.2s ease, box-shadow 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow =
+                  (e.currentTarget).style.transform = "translateY(-3px)";
+                  (e.currentTarget).style.boxShadow =
                     "0 8px 32px rgba(26,26,46,0.13)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                  (e.currentTarget as HTMLElement).style.boxShadow =
+                  (e.currentTarget).style.transform = "translateY(0)";
+                  (e.currentTarget).style.boxShadow =
                     "0 2px 16px rgba(26,26,46,0.07)";
                 }}
               >
@@ -369,10 +368,6 @@ function MetaItem({
   icon,
   color,
   children,
-}: {
-  icon: React.ReactNode;
-  color: string;
-  children: React.ReactNode;
 }) {
   return (
     <span
