@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma";
-import { isSessionLive } from "@/app/lib/session-utils";
+import { prisma } from "../../../../lib/prisma";
+import { isSessionLive } from "../../../../lib/session-utils";
+
+const rateLimitMap = new Map();
 
 // ── Validation ─────────────────────────────────────────────────────────────
 function validateQuestion(body) {
@@ -44,8 +46,6 @@ export async function GET(_req, { params }) {
     );
   }
 
-  // Champs du modèle Question (@@map("questions"))
-  // id, content, authorName (author_name), upvotes, createdAt (created_at), sessionId (session_id)
   const questions = await prisma.question.findMany({
     where: { sessionId },          // sessionId = session_id en DB
     orderBy: { upvotes: "desc" },  // tri décroissant (spec §4.5)
@@ -65,8 +65,6 @@ export async function GET(_req, { params }) {
   });
 }
 
-// ── POST ───────────────────────────────────────────────────────────────────
-// Crée une question — uniquement si la session est LIVE
 export async function POST(req, { params }) {
   const { id: sessionId } = params;
 
@@ -83,7 +81,6 @@ export async function POST(req, { params }) {
     );
   }
 
-  // 2. Garde LIVE (spec §4.5)
   if (!isSessionLive(session.startTime, session.endTime)) {
     return NextResponse.json(
       {
@@ -93,6 +90,19 @@ export async function POST(req, { params }) {
       { status: 403 }
     );
   }
+
+  const ip = req.headers.get("x-forwarded-for") || req.ip || "unknown";
+  const now = Date.now();
+  if (rateLimitMap.has(ip)) {
+    const lastPost = rateLimitMap.get(ip);
+    if (now - lastPost < 30000) {
+      return NextResponse.json(
+        { error: "Please wait 30 seconds before posting another question." },
+        { status: 429 }
+      );
+    }
+  }
+  rateLimitMap.set(ip, now);
 
   // 3. Parser le body
   let body;

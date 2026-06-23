@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma";
-import { isSessionLive } from "@/app/lib/session-utils";
+import { prisma } from "../../../../lib/prisma";
+import { isSessionLive } from "../../../../lib/session-utils";
 
 export async function POST(_req, { params }) {
   const { id: questionId } = params;
@@ -16,17 +16,14 @@ export async function POST(_req, { params }) {
 
   if (!question) {
     return NextResponse.json(
-      { error: "Question introuvable." },
+      { error: "Question not found." },
       { status: 404 }
     );
   }
 
   if (!isSessionLive(question.session.startTime, question.session.endTime)) {
     return NextResponse.json(
-      {
-        error:
-          "Les upvotes ne sont possibles que pendant une session en cours (LIVE).",
-      },
+      { error: "Upvotes are only possible during a live session." },
       { status: 403 }
     );
   }
