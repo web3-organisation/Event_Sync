@@ -1,26 +1,33 @@
-import {NextResponse} from "next/server";
-import {PrismaClient} from "@prisma/client";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import SpeakerProfile from "@/components/speakers/SpeakerProfile";
+
+const corsHeaders = {
+    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+};
 
 export async function GET(request, { params }) {
+    const { id } = await params;
+
     const speaker = await prisma.speaker.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: { speakerLinks: true },
     });
 
     if (!speaker) {
-        return NextResponse.json({ error: "Not found" }, { status: 404 });
+        return NextResponse.json({ error: "Not found" }, { status: 404, headers: corsHeaders });
     }
 
-    return NextResponse.json(speaker);
+    return NextResponse.json(speaker, { headers: corsHeaders });
 }
 
 export async function PUT(request, { params }) {
+    const { id } = await params;
     const body = await request.json();
 
     const speaker = await prisma.speaker.update({
-        where: { id: params.id },
+        where: { id },
         data: {
             fullName: body.fullName,
             photoUrl: body.photoUrl || null,
@@ -28,13 +35,19 @@ export async function PUT(request, { params }) {
         },
     });
 
-    return NextResponse.json(speaker);
+    return NextResponse.json(speaker, { headers: corsHeaders });
 }
 
 export async function DELETE(request, { params }) {
+    const { id } = await params;
+
     await prisma.speaker.delete({
-        where: { id: params.id },
+        where: { id },
     });
 
-    return NextResponse.json({ id: params.id });
+    return NextResponse.json({ id }, { headers: corsHeaders });
+}
+
+export async function OPTIONS() {
+    return new Response(null, { status: 200, headers: corsHeaders });
 }

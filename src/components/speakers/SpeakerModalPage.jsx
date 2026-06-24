@@ -12,8 +12,13 @@ const TRACK_CONFIG = {
 
 export default function SpeakerModalPage({ speaker }) {
     const router = useRouter();
-
     const cfg = TRACK_CONFIG[speaker.track] ?? TRACK_CONFIG.ai;
+
+    // ── Harmonisation : speakerLinks (Prisma) → links (attendu par SpeakerModal) ──
+    const normalizedSpeaker = {
+        ...speaker,
+        links: speaker.speakerLinks ?? [],
+    };
 
     const handleClose = () => {
         router.back();
@@ -21,7 +26,7 @@ export default function SpeakerModalPage({ speaker }) {
 
     return (
         <SpeakerModal
-            speaker={speaker}
+            speaker={normalizedSpeaker}
             cfg={cfg}
             onClose={handleClose}
         />
