@@ -55,6 +55,9 @@ export default function RootLayout({ children }) {
             <Link href="/" style={{ fontWeight: '500', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Événements</Link>
             <Link href="/planning" style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '0.95rem' }}>Sessions</Link>
             <Link href="/planning" style={{ fontWeight: '500', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Intervenants</Link>
+            <Link href="http://localhost:5173/login" target="react_admin_tab" style={{ fontWeight: '600', color: 'var(--ev-background)', background: 'var(--ev-primary)', padding: '6px 16px', borderRadius: '20px', fontSize: '0.9rem', display: 'flex', alignItems: 'center' }}>
+              Intranet
+            </Link>
             <ThemeToggle />
           </div>
         </nav>

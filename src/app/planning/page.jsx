@@ -3,7 +3,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import SessionCard from "@/app/components/SessionCard";
-import AddSessionModal from "@/app/components/AddSessionModal";
+
 
 export const dynamic = "force-dynamic";
 
@@ -151,6 +151,27 @@ export default async function SchedulePage() {
         </span>
 
         <h1 className={styles.title}>{event ? event.title : "Planning global"}</h1>
+        
+        <div style={{ margin: "20px 0" }}>
+          <Link 
+            href="http://localhost:5173/admin/events" 
+            target="react_admin_tab"
+            style={{ 
+              display: "inline-flex", 
+              alignItems: "center",
+              background: "var(--ev-primary)", 
+              color: "var(--ev-background)", 
+              padding: "10px 24px", 
+              borderRadius: "8px",
+              fontWeight: "bold",
+              textDecoration: "none",
+              boxShadow: "0 4px 14px 0 rgba(245, 158, 11, 0.39)",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease"
+            }}
+          >
+            Gérer les événements ⚙️
+          </Link>
+        </div>
 
         {event && (
           <div className={styles.eventMeta}>
@@ -166,15 +187,6 @@ export default async function SchedulePage() {
               🏛️ {rooms.length} salle{rooms.length !== 1 ? "s" : ""} ·{" "}
               {sessions.length} session{sessions.length !== 1 ? "s" : ""}
             </span>
-
-            <AddSessionModal eventId={event.id} />
-
-            <form action={deleteEvent}>
-              <input type="hidden" name="id" value={event.id} />
-              <button type="submit" className={styles.deleteButton}>
-                🗑️ Supprimer l'événement
-              </button>
-            </form>
           </div>
         )}
 

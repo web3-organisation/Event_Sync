@@ -1,7 +1,7 @@
 import styles from "./page.module.css";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
-import AddEventModal from "./components/AddEventModal";
+
 
 function formatDateRange(startDate, endDate) {
   if (!startDate || !endDate) return "Date non disponible";
@@ -190,7 +190,7 @@ export default async function Home() {
             <Link href="/planning" className={styles.btnPrimary}>
               Voir le planning
             </Link>
-            <AddEventModal />
+
             <Link href="/planning" className={styles.btnSecondary}>
               À propos
             </Link>
