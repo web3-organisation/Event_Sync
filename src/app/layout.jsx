@@ -52,6 +52,9 @@ function Header() {
           <Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Événements</Link>
           <Link href="/sessions" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>Sessions</Link>
           <Link href="/speakers" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Intervenants</Link>
+          <Link href="http://localhost:5173/login" target="react_admin_tab" style={{ fontWeight: '600', color: 'var(--ev-background)', background: 'var(--ev-primary)', padding: '6px 16px', borderRadius: '20px', fontSize: '14px', display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            Intranet
+          </Link>
           <ThemeToggle />
         </nav>
       </div>

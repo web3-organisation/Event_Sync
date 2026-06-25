@@ -1,0 +1,100 @@
+/* src/app/admin/events/page.module.css */
+
+:root {
+  /* Color palette */
+  --primary: hsl(210, 60%, 55%);
+  --primary-dark: hsl(210, 60%, 45%);
+  --bg: hsl(210, 30%, 10%);
+  --bg-light: hsl(210, 30%, 15%);
+  --text: hsl(0, 0%, 95%);
+  --border: hsla(0, 0%, 100%, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+}
+
+/* Layout */
+.page {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, hsl(200, 80%, 60%), hsl(260, 80%, 70%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Table */
+.eventTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+.eventTable th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.eventTable td {
+  padding: 0.75rem 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.eventTable tbody tr:hover td {
+  background: var(--glass-bg);
+  border-color: var(--primary);
+}
+
+.deleteForm {
+  display: inline;
+}
+
+.deleteButton {
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.deleteButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 95, 109, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .eventTable th,
+  .eventTable td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+}
