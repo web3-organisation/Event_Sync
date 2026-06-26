@@ -1,90 +1,154 @@
-
 /* ── Card ── */
 .card {
     position: relative;
-    display: flex;
-    flex-direction: column;
     background: #ffffff;
-    border: 1px solid var(--ev-border);
-    border-left: 4px solid transparent;
-    border-radius: 12px;
-    padding: 16px;
-    transition: all 0.25s ease;
+    border-radius: 20px;
     overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    height: 320px; /* hauteur fixe */
 }
 
 .card:hover {
-    background: var(--ev-primary-lt);
+    box-shadow: 0 12px 36px rgba(99, 102, 241, 0.18);
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(108,99,255,0.10);
 }
 
-.cardAi { border-left-color: #7c3aed; }
-.cardCy { border-left-color: #0891b2; }
-.cardCl { border-left-color: #059669; }
-.cardDs { border-left-color: #d97706; }
+/* ── Photo : toujours en position absolue, pleine card ── */
+.photoWrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ede9fe, #c7d2fe);
+    transition: opacity 0.3s ease;
+}
 
-.topRow { display: flex; align-items: center; gap: 14px; }
+/* Par défaut : la photo ne couvre que les 2/3 supérieurs */
+.photoWrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 40%,
+        #ffffff 68%,
+        #ffffff 100%
+    );
+    transition: background 0.35s ease;
+}
 
-.av {
-    width: 56px; height: 56px;
+/* Au hover : le dégradé descend pour laisser la photo dominer */
+.card:hover .photoWrap::after {
+    background: linear-gradient(
+        to bottom,
+        transparent 55%,
+        rgba(15, 23, 42, 0.55) 100%
+    );
+}
+
+.photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.4s ease;
+    display: block;
+}
+
+.card:hover .photo {
+    transform: scale(1.05);
+}
+
+.initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #6366f1;
+}
+
+/* ── Card body : positionné au bas de la card ── */
+.cardBody {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 14px 16px 18px;
+    z-index: 2;
+    transition: padding 0.35s ease;
+}
+
+/* Au hover : texte en blanc car fond devient sombre */
+.card:hover .cardBody {
+    padding-bottom: 22px;
+}
+
+.nameRow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 6px;
+}
+
+.name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+.card:hover .name {
+    color: #ffffff;
+}
+
+.verifiedBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: #16a34a;
+    color: #fff;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: 700;
-    flex-shrink: 0; overflow: hidden;
+    font-size: 0.5rem;
+    flex-shrink: 0;
 }
-.avatarImg { width: 100%; height: 100%; object-fit: cover; }
 
-.avAi { background: rgba(124,58,237,0.12); color: #7c3aed; }
-.avCy { background: rgba(8,145,178,0.12);  color: #0891b2; }
-.avCl { background: rgba(5,150,105,0.12);  color: #059669; }
-.avDs { background: rgba(217,119,6,0.12);  color: #d97706; }
-
-.info { flex: 1; min-width: 0; }
-
-.spName { color: var(--ev-dark); font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.spRole { color: #6B7FA3; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.spCo   { color: #94a3b8; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.links { display: flex; gap: 6px; margin-top: 10px; }
-
-.lnk {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    border: 1px solid var(--ev-border);
-    background: var(--ev-surface);
-    color: #6B7FA3;
-    display: flex; align-items: center; justify-content: center;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
+.bio {
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+    transition: color 0.3s ease;
 }
-.lnk:hover { color: var(--ev-primary); border-color: rgba(108,99,255,0.4); background: var(--ev-primary-lt); }
 
-.badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid; white-space: nowrap; align-self: flex-start; }
+.card:hover .bio {
+    color: rgba(255, 255, 255, 0.85);
+}
 
-.badgeAi { background: rgba(124,58,237,0.10); color: #7c3aed; border-color: rgba(124,58,237,0.30); }
-.badgeCy { background: rgba(8,145,178,0.10);  color: #0891b2; border-color: rgba(8,145,178,0.30); }
-.badgeCl { background: rgba(5,150,105,0.10);  color: #059669; border-color: rgba(5,150,105,0.30); }
-.badgeDs { background: rgba(217,119,6,0.10);  color: #d97706; border-color: rgba(217,119,6,0.30); }
-
-.bioSection { margin-top: 14px; border-top: 1px solid var(--ev-border); padding-top: 12px; }
-.bioText    { color: #6B7FA3; font-size: 12px; line-height: 1.7; }
-.bioBtn     { margin-top: 8px; background: none; border: none; color: var(--ev-primary); cursor: pointer; font-size: 12px; }
-.bioBtn:hover { color: var(--ev-accent); }
-
-.highlight { background: var(--ev-primary-lt); color: var(--ev-primary); border-radius: 4px; padding: 0 2px; }
+.highlight {
+    background: #fef08a;
+    border-radius: 2px;
+}
 
 /* ── Overlay ── */
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
-    padding: 20px;
+    padding: 16px;
     animation: fadeIn 0.2s ease;
 }
 
@@ -96,14 +160,15 @@
 /* ── Modal ── */
 .modal {
     background: #ffffff;
-    border-radius: 16px;
-    border: 1px solid var(--ev-border);
+    border-radius: 24px;
     width: 100%;
-    max-width: 520px;
-    max-height: 85vh;
-    overflow-y: auto;
+    max-width: 440px;
+    overflow: hidden;
     position: relative;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
     animation: slideUp 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 @keyframes slideUp {
@@ -113,119 +178,111 @@
 
 .closeBtn {
     position: absolute;
-    top: 14px; right: 14px;
-    background: var(--ev-surface);
-    border: 1px solid var(--ev-border);
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
     border-radius: 50%;
-    width: 30px; height: 30px;
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
     cursor: pointer;
-    font-size: 13px;
-    color: #6B7FA3;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-    z-index: 1;
-}
-.closeBtn:hover { background: var(--ev-primary-lt); color: var(--ev-primary); }
-
-/* ── Modal header ── */
-.modalHeader {
     display: flex;
-    gap: 1.25rem;
-    align-items: flex-start;
-    padding: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    color: #0f172a;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
 }
 
-.modalAv {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: 700;
-    flex-shrink: 0; overflow: hidden;
+.closeBtn:hover {
+    background: #ffffff;
 }
 
-.modalMeta { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-
-.modalMetaLeft { flex: 1; min-width: 0; }
-
-.modalName    { font-size: 17px; font-weight: 600; margin: 0 0 3px; color: var(--ev-dark); }
-.modalRole    { font-size: 13px; color: #6B7FA3; margin: 0 0 2px; }
-.modalCompany { font-size: 13px; color: #94a3b8; margin: 0 0 10px; }
-
-.modalBadges { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-
-.skillBadge {
-    font-size: 11px; padding: 2px 9px;
-    border-radius: 999px;
-    background: var(--ev-surface);
-    color: #6B7FA3;
-    border: 1px solid var(--ev-border);
+.modalPhoto {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ede9fe, #c7d2fe);
 }
 
-/* Contacts column */
-.modalContacts { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
-
-.contactBtn {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; padding: 5px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--ev-border);
-    background: var(--ev-surface);
-    color: #6B7FA3;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: all 0.2s;
+.modalPhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
 }
-.contactBtn:hover { background: var(--ev-primary-lt); color: var(--ev-primary); border-color: rgba(108,99,255,0.4); }
 
-.contactIcon { font-size: 13px; }
+.modalInitials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #6366f1;
+}
 
-/* ── Sections ── */
-.modalDivider { height: 1px; background: var(--ev-border); margin: 0 1.5rem; }
+.modalBody {
+    padding: 20px 24px 28px;
+}
 
-.modalSection { padding: 1rem 1.5rem; }
-
-.sectionLabel {
-    font-size: 11px; font-weight: 600;
-    color: #6B7FA3;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+.modalName {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
     margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* Bio */
-.bioText { color: #6B7FA3; font-size: 13px; line-height: 1.7; margin: 0; }
+.modalVerified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #16a34a;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.55rem;
+    flex-shrink: 0;
+}
 
-/* Timeline */
-.timeline { display: flex; flex-direction: column; gap: 10px; }
+.modalBio {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.65;
+    margin: 0 0 20px;
+}
 
-.timelineItem { display: flex; gap: 10px; align-items: flex-start; }
+.modalActions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 
-.timelineLeft { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.actionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: #6366f1;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
 
-.timelineDot { width: 8px; height: 8px; border-radius: 50%; background: var(--ev-border); margin-top: 4px; }
-.timelineDotActive { background: var(--ev-primary); }
-.timelineLine { width: 1px; flex: 1; background: var(--ev-border); margin-top: 3px; min-height: 20px; }
-
-.expTitle { font-size: 13px; font-weight: 600; margin: 0; color: var(--ev-dark); }
-.expSub   { font-size: 12px; color: #6B7FA3; margin: 0; }
-
-/* Education */
-.eduList { display: flex; flex-direction: column; gap: 10px; }
-
-.eduItem { display: flex; gap: 10px; align-items: flex-start; }
-
-.eduIcon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: var(--ev-primary-lt);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
+.actionBtn:hover {
+    background: #4f46e5;
 }
 
 @media (max-width: 640px) {
-    .modalHeader { flex-direction: column; align-items: center; text-align: center; }
-    .modalMeta   { flex-direction: column; align-items: center; }
-    .modalContacts { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-    .card { padding: 14px; }
-    .av   { width: 48px; height: 48px; }
+    .card { height: 280px; }
 }

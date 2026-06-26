@@ -2,66 +2,30 @@
 
 import { useState } from "react";
 import SearchBar from "./SearchBar";
-import SessionGroup from "./SessionGroup";
+import SpeakerCard from "./SpeakerCard";
 import styles from "./SpeakerList.module.css";
 
-const SpeakerList = ({ sessions }) => {
-
+const SpeakerList = ({ speakers = [] }) => {
     const [search, setSearch] = useState("");
-    const [selectedSession, setSelectedSession] = useState("all");
 
-    // Stats
-    const totalSpeakers = sessions.reduce(
-        (acc, s) => acc + s.speakers.length, 0
-    );
-
-    // Filter
     const query = search.toLowerCase();
 
-    const filteredSessions = sessions
-        .filter((s) =>
-            selectedSession === "all" ||
-            s.id === selectedSession
-        )
-        .map((session) => ({
-            ...session,
-            speakers: session.speakers.filter((sp) =>
-                sp.fullName.toLowerCase().includes(query) ||
-                sp.bio?.toLowerCase().includes(query)
-            ),
-        }))
-        .filter((s) => s.speakers.length > 0);
-
-    const resultCount = filteredSessions.reduce(
-        (acc, s) => acc + s.speakers.length, 0
+    const filteredSpeakers = speakers.filter((sp) =>
+        sp.fullName.toLowerCase().includes(query) ||
+        sp.bio?.toLowerCase().includes(query)
     );
-
-    // ← AJOUT : tri par isLive puis par heure croissante
-    const toMin = (t = "") => {
-        const [h, m] = (t.split(" ")[0] ?? "0:0").split(":").map(Number);
-        return h * 60 + m;
-    };
-
-    const sortedSessions = [...filteredSessions].sort((a, b) => {
-        if (a.isLive && !b.isLive) return -1;
-        if (!a.isLive && b.isLive) return 1;
-        return toMin(a.time) - toMin(b.time);
-    });
 
     return (
         <div className={styles.page}>
             <div className={styles.container}>
-                <div className={styles.searchContainer}>
 
-                    {/* Searching speakers */}
+                {/* Search + Stats */}
+                <div className={styles.searchContainer}>
                     <div className={styles.searchBarContainer}>
                         <SearchBar
                             search={search}
                             setSearch={setSearch}
-                            selectedSession={selectedSession}
-                            setSelectedSession={setSelectedSession}
-                            sessions={sessions}
-                            resultCount={resultCount}
+                            resultCount={filteredSpeakers.length}
                         />
                     </div>
 
@@ -69,53 +33,48 @@ const SpeakerList = ({ sessions }) => {
                         <div className={styles.statsRow}>
                             <div className={styles.statCard}>
                                 <span className={styles.statValue}>
-                                    {sessions.length}<em>sessions</em>
+                                    {speakers.length}<em>speakers</em>
                                 </span>
-                                <span className={styles.statLabel}>SCHEDULED</span>
+                                <span className={styles.statLabel}>CONFIRMED</span>
                             </div>
                             <div className={styles.statDivider} />
                             <div className={styles.statCard}>
                                 <span className={styles.statValue}>
-                                    {totalSpeakers}<em>speakers</em>
+                                    {filteredSpeakers.length}<em>résultats</em>
                                 </span>
-                                <span className={styles.statLabel}>CONFIRMED</span>
+                                <span className={styles.statLabel}>FOUND</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* If case : No results */}
-                {filteredSessions.length === 0 && (
+                {/* No results */}
+                {filteredSpeakers.length === 0 && (
                     <div className={styles.noResults}>
-                        <p className={styles.noResultsIcon}> 404 </p>
-                        <p className={styles.noResultsText}>
-                            Speaker not found
-                        </p>
-                        <p className={styles.noResultsScuse}>
-                            Sorry ! This Speaker does not exist
-                        </p>
+                        <p className={styles.noResultsIcon}>404</p>
+                        <p className={styles.noResultsText}>Speaker not found</p>
+                        <p className={styles.noResultsScuse}>Sorry ! This Speaker does not exist</p>
                         <button
                             className={styles.resetBtn}
-                            onClick={() => {
-                                setSearch("");
-                                setSelectedSession("all");
-                            }}
+                            onClick={() => setSearch("")}
                         >
                             Go Back
                         </button>
                     </div>
                 )}
 
-
-                <div>
-                    {sortedSessions.map((session) => (
-                        <SessionGroup
-                            key={session.id}
-                            session={session}
-                            searchQuery={search}
-                        />
-                    ))}
-                </div>
+                {/* Grid */}
+                {filteredSpeakers.length > 0 && (
+                    <div className={styles.grid}>
+                        {filteredSpeakers.map((speaker) => (
+                            <SpeakerCard
+                                key={speaker.id}
+                                speaker={speaker}
+                                searchQuery={search}
+                            />
+                        ))}
+                    </div>
+                )}
 
             </div>
         </div>
@@ -123,4 +82,3 @@ const SpeakerList = ({ sessions }) => {
 };
 
 export default SpeakerList;
-

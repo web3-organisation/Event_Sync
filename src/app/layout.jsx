@@ -98,17 +98,6 @@ function Header() {
             Événements
           </Link>
           <Link
-            href="/sessions"
-            style={{
-              color: "var(--text-primary)",
-              textDecoration: "none",
-              fontSize: "14px",
-              fontWeight: 600,
-            }}
-          >
-            Sessions
-          </Link>
-          <Link
             href="/speakers"
             style={{
               color: "var(--text-secondary)",

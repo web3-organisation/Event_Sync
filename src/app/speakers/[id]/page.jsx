@@ -1,3 +1,4 @@
+// src/app/speakers/[id]/page.jsx
 import { notFound } from "next/navigation";
 import SpeakerModalPage from "@/components/speakers/SpeakerModalPage";
 
