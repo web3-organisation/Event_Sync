@@ -1,4 +1,3 @@
-import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import SpeakerModalPage from "@/components/speakers/SpeakerModalPage";
 

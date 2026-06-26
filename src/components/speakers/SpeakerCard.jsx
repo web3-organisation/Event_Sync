@@ -204,6 +204,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import styles from "./SpeakerCard.module.css";
 
 const TRACK_CONFIG = {
@@ -230,9 +231,10 @@ export function SpeakerModal({ speaker, cfg, onClose }) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // Suppression de la règle pour le SSR : c'est un cas valide d'initialisation d'état au montage
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
-
 
     useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -240,7 +242,6 @@ export function SpeakerModal({ speaker, cfg, onClose }) {
             document.body.style.overflow = "";
         };
     }, []);
-
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -266,7 +267,7 @@ export function SpeakerModal({ speaker, cfg, onClose }) {
                 <div className={styles.modalHeader}>
                     <div className={`${styles.modalAv} ${cfg.avClass}`}>
                         {speaker.photoUrl ? (
-                            <img src={speaker.photoUrl} alt={speaker.fullName} className={styles.avatarImg} />
+                            <Image src={speaker.photoUrl} alt={speaker.fullName} className={styles.avatarImg} width={80} height={80} />
                         ) : (
                             getInitials(speaker.fullName)
                         )}

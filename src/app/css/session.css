@@ -857,3 +857,227 @@ body {
     padding: 20px;
   }
 }
+
+/* ============================================================
+   STREAM SECTION (mock)
+   ============================================================ */
+.stream-section {
+  /* hérite du gap de session-main */
+}
+
+/* ── LIVE PLAYER ── */
+.stream-player {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-glow);
+  background: #000;
+  max-width: 640px;
+}
+
+.stream-player__screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0d0d14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fond bruité animé pour simuler un flux vidéo */
+.stream-player__noise {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.015) 2px,
+      rgba(255,255,255,0.015) 4px
+    ),
+    linear-gradient(135deg, #0f0f1a 0%, #1a0a2e 50%, #0a0f1a 100%);
+  animation: streamShift 8s ease-in-out infinite alternate;
+}
+
+@keyframes streamShift {
+  0%   { filter: brightness(1) hue-rotate(0deg); }
+  50%  { filter: brightness(1.1) hue-rotate(10deg); }
+  100% { filter: brightness(0.95) hue-rotate(-5deg); }
+}
+
+.stream-player__overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+}
+
+.stream-live-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--teal);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+}
+
+.stream-player__label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stream-player__play-icon {
+  position: relative;
+  z-index: 2;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 16px rgba(124,58,237,0.6));
+  animation: playerPulse 3s ease-in-out infinite;
+}
+
+@keyframes playerPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%       { transform: scale(1.05); opacity: 1; }
+}
+
+/* Fausse barre de contrôles */
+.stream-player__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #111118;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.stream-controls__left,
+.stream-controls__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stream-ctrl-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.stream-ctrl-time {
+  font-size: 12px;
+  color: var(--teal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── UPCOMING ── */
+.stream-upcoming {
+  background: var(--navy-light);
+  border: 2px dashed var(--border-mid);
+  border-radius: var(--radius-lg);
+  padding: 40px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 640px;
+}
+
+.stream-upcoming__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sky);
+}
+
+.stream-upcoming__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stream-upcoming__desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 360px;
+  line-height: 1.7;
+}
+
+.stream-upcoming__desc strong {
+  color: var(--sky);
+}
+
+/* ── ENDED ── */
+.stream-ended {
+  background: var(--navy-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 640px;
+  opacity: 0.75;
+}
+
+.stream-ended__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(100, 116, 139, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.stream-ended__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stream-ended__desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 360px;
+  line-height: 1.7;
+}
+
+/* Badge "Terminée" dans le hero */
+.status-ended {
+  background: rgba(100, 116, 139, 0.1);
+  border-color: rgba(100, 116, 139, 0.2);
+  color: var(--text-muted);
+}
