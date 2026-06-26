@@ -1,9 +1,10 @@
-import prisma from "@/lib/prisma";
+//app/admin/events/page.jsx
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import AddEventModal from "@/app/components/AddEventModal";
 import styles from "./page.module.css";
 
-async function deleteEventsByIds(eventIds: string[]) {
+async function deleteEventsByIds(eventIds) {
   if (!eventIds.length) return;
 
   // Delete related sessions and their dependencies
@@ -35,9 +36,9 @@ async function deleteEventsByIds(eventIds: string[]) {
   await prisma.event.deleteMany({ where: { id: { in: eventIds } } });
 }
 
-async function deleteEvent(formData: FormData) {
+async function deleteEvent(formData) {
   "use server";
-  const id = formData.get("id") as string | null;
+  const id = formData.get("id");
   if (!id) return;
   await deleteEventsByIds([id]);
   redirect("/admin/events");

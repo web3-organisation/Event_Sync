@@ -1,7 +1,9 @@
+// src/app/sessions/[id]/actions.js
 "use server";
 
-import { prisma } from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
+
+const API_BASE = process.env.NEXT_PUBLIC_APP_URL;
 
 export async function submitQuestion(sessionId, formData) {
   const content = formData.get("content");
@@ -12,25 +14,35 @@ export async function submitQuestion(sessionId, formData) {
   }
 
   try {
-    await prisma.question.create({
-      data: {
-        content: content.trim(),
+    const res = await fetch(`${API_BASE}/api/sessions/${sessionId}/questions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content:    content.trim(),
         authorName: authorName?.trim() || null,
-        sessionId,
-      },
+      }),
     });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      // Remonte le message d'erreur de la route (anti-spam, doublon, etc.)
+      return { error: data.error ?? "Erreur lors de l'envoi de la question." };
+    }
+
     revalidatePath(`/sessions/${sessionId}`);
+    return { question: data };
+
   } catch (e) {
     console.error(e);
-    return { error: "Erreur lors de l'envoi de la question." };
+    return { error: "Erreur réseau lors de l'envoi de la question." };
   }
 }
 
 export async function upvoteQuestion(questionId, sessionId) {
   try {
-    await prisma.question.update({
-      where: { id: questionId },
-      data: { upvotes: { increment: 1 } },
+    await fetch(`${API_BASE}/api/questions/${questionId}/upvote`, {
+      method: "POST",
     });
     revalidatePath(`/sessions/${sessionId}`);
   } catch (e) {
@@ -40,9 +52,8 @@ export async function upvoteQuestion(questionId, sessionId) {
 
 export async function downvoteQuestion(questionId, sessionId) {
   try {
-    await prisma.question.update({
-      where: { id: questionId },
-      data: { upvotes: { decrement: 1 } },
+    await fetch(`${API_BASE}/api/questions/${questionId}/downvote`, {
+      method: "POST",
     });
     revalidatePath(`/sessions/${sessionId}`);
   } catch (e) {

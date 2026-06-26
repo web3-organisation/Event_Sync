@@ -1,30 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "../planning/page.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faClock,
+  faCircle,
+  faMicrophone,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function SessionCard({ session }) {
-  const router = useRouter();
-
-  const deleteSession = async () => {
-    if (!confirm('Supprimer cette session ?')) return;
-    try {
-      const res = await fetch(`/api/sessions/${session.id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Échec de la suppression');
-      router.refresh();
-    } catch (e) {
-      console.error(e);
-      alert('Impossible de supprimer la session');
-    }
-  };
-
   const now = new Date();
   const start = new Date(session.startTime);
   const end = new Date(session.endTime);
   const live = start <= now && end >= now;
   const upcoming = start > now;
+
   let statusLabel = "Terminé";
   let badgeStyleClass = styles.done;
   if (live) {
@@ -41,22 +32,39 @@ export default function SessionCard({ session }) {
         <div>
           <h3 className={styles.sessionTitle}>{session.title}</h3>
           <div className={styles.sessionTime}>
-            <span>🕐</span> {formatTime(session.startTime)} - {formatTime(session.endTime)}
+            <FontAwesomeIcon
+              icon={faClock}
+              style={{ width: "13px", height: "13px" }}
+            />
+            {formatTime(session.startTime)} - {formatTime(session.endTime)}
           </div>
         </div>
         <span className={`${styles.cardBadge} ${badgeStyleClass}`}>
-          {live && <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'currentColor', display: 'inline-block' }} className="live-pulse" />}
+          {live && (
+            <FontAwesomeIcon
+              icon={faCircle}
+              className="live-pulse"
+              style={{ width: "6px", height: "6px" }}
+            />
+          )}
           {statusLabel}
         </span>
       </div>
+
       <div className={styles.speakers}>
+        <FontAwesomeIcon
+          icon={faMicrophone}
+          style={{ width: "12px", height: "12px", marginRight: "6px" }}
+        />
         {session.speakers && session.speakers.length > 0
-          ? `Intervenants : ${session.speakers.join(', ')}`
+          ? session.speakers.join(", ")
           : "Pas d'intervenants renseignés"}
       </div>
-      <div style={{ marginTop: '12px' }}>
-        <button className={styles.btnSecondary} type="button" onClick={deleteSession}>Supprimer</button>
-        <button className={styles.btnSecondary} type="button">Détails</button>
+
+      <div style={{ marginTop: "12px" }}>
+        <Link href={`/sessions/${session.id}`} className={styles.btnSecondary}>
+          Voir la session
+        </Link>
       </div>
     </article>
   );
@@ -64,8 +72,12 @@ export default function SessionCard({ session }) {
 
 function formatTime(dateString) {
   try {
-    return new Date(dateString).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return new Date(dateString).toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Europe/Paris", 
+    });
   } catch {
-    return '--:--';
+    return "--:--";
   }
 }

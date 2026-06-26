@@ -8,6 +8,6 @@ export default defineConfig({
     seed: 'node ./prisma/seed.js',
   },
   datasource: {
-    url: process.env.DATABASE_URL || 'postgresql://events_manager:123456@localhost:5432/events_synck_bd',
+    url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/events_sync_db',
   },
 });

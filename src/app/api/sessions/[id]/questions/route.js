@@ -1,8 +1,29 @@
+// src/app/api/sessions/[id]/questions/route.js
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { isSessionLive } from "../../../../lib/session-utils";
 
-const rateLimitMap = new Map();
+const COOLDOWN_MS = 10_000; // 10 secondes
+
+// Maps en mémoire pour le rate limiting
+// clé → { timestamp, content }
+const anonRateLimit = new Map();  // content_normalisé → { timestamp }
+const nameRateLimit = new Map();  // nom_normalisé     → { timestamp, content }
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function normalizeContent(str) {
+  return str.trim().toLowerCase();
+}
+
+function normalizeName(str) {
+  return str.trim().toLowerCase();
+}
+
+function getRemainingCooldown(timestamp) {
+  const elapsed = Date.now() - timestamp;
+  if (elapsed < COOLDOWN_MS) return Math.ceil((COOLDOWN_MS - elapsed) / 1000);
+  return null;
+}
 
 // ── Validation ─────────────────────────────────────────────────────────────
 function validateQuestion(body) {
@@ -29,32 +50,27 @@ function validateQuestion(body) {
 }
 
 // ── GET ────────────────────────────────────────────────────────────────────
-// Retourne les questions de la session triées par upvotes décroissants
 export async function GET(_req, { params }) {
-  const { id: sessionId } = params;
+  const { id: sessionId } = await params;
 
-  // On récupère startTime / endTime pour le calcul LIVE
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
     select: { id: true, startTime: true, endTime: true },
   });
 
   if (!session) {
-    return NextResponse.json(
-      { error: "Session introuvable." },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Session introuvable." }, { status: 404 });
   }
 
   const questions = await prisma.question.findMany({
-    where: { sessionId },          // sessionId = session_id en DB
-    orderBy: { upvotes: "desc" },  // tri décroissant (spec §4.5)
+    where: { sessionId },
+    orderBy: { upvotes: "desc" },
     select: {
       id: true,
       content: true,
-      authorName: true,  // author_name en DB
+      authorName: true,
       upvotes: true,
-      createdAt: true,   // created_at en DB
+      createdAt: true,
     },
   });
 
@@ -65,71 +81,110 @@ export async function GET(_req, { params }) {
   });
 }
 
+// ── POST ───────────────────────────────────────────────────────────────────
 export async function POST(req, { params }) {
-  const { id: sessionId } = params;
+  const { id: sessionId } = await params;
 
-  // 1. Session existante ?
+  // 1. Session existante et live ?
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
     select: { id: true, startTime: true, endTime: true },
   });
 
   if (!session) {
-    return NextResponse.json(
-      { error: "Session introuvable." },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Session introuvable." }, { status: 404 });
   }
 
   if (!isSessionLive(session.startTime, session.endTime)) {
     return NextResponse.json(
-      {
-        error:
-          "Les questions ne peuvent être posées que pendant une session en cours (LIVE).",
-      },
+      { error: "Les questions ne peuvent être posées que pendant une session en cours (LIVE)." },
       { status: 403 }
     );
   }
 
-  const ip = req.headers.get("x-forwarded-for") || req.ip || "unknown";
-  const now = Date.now();
-  if (rateLimitMap.has(ip)) {
-    const lastPost = rateLimitMap.get(ip);
-    if (now - lastPost < 30000) {
-      return NextResponse.json(
-        { error: "Please wait 30 seconds before posting another question." },
-        { status: 429 }
-      );
-    }
-  }
-  rateLimitMap.set(ip, now);
-
-  // 3. Parser le body
+  // 2. Parser le body
   let body;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json(
-      { error: "Corps de requête invalide." },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Corps de requête invalide." }, { status: 400 });
   }
 
-  // 4. Valider
+  // 3. Valider les champs
   const errors = validateQuestion(body);
   if (Object.keys(errors).length > 0) {
+    return NextResponse.json({ error: "Données invalides.", details: errors }, { status: 422 });
+  }
+
+  const contentNorm = normalizeContent(body.content);
+  const hasName     = typeof body.authorName === "string" && body.authorName.trim().length > 0;
+  const nameNorm    = hasName ? normalizeName(body.authorName) : null;
+
+  // 4. Vérifier si la question existe déjà en base (même contenu, même session)
+  const existingQuestion = await prisma.question.findFirst({
+    where: {
+      sessionId,
+      content: { equals: body.content.trim(), mode: "insensitive" },
+    },
+    select: { id: true },
+  });
+
+  if (existingQuestion) {
     return NextResponse.json(
-      { error: "Données invalides.", details: errors },
-      { status: 422 }
+      { error: "Cette question est déjà posée." },
+      { status: 409 }
     );
   }
 
-  // 5. Créer la question
-  // authorName null = anonyme (spec §3.5)
+  // 5. Anti-spam : logique différente selon anonyme ou nommé
+  if (hasName) {
+    // ── Utilisateur nommé ──────────────────────────────────────────────────
+    // Bloqué si : même nom posté il y a < 10s (peu importe le contenu)
+    //           OU même nom + même contenu posté il y a < 10s
+    const entry = nameRateLimit.get(nameNorm);
+
+    if (entry) {
+      const remaining = getRemainingCooldown(entry.timestamp);
+      if (remaining !== null) {
+        // Même nom récent → bloqué dans tous les cas
+        return NextResponse.json(
+          {
+            error: `Merci d'attendre encore ${remaining}s avant de poser à nouveau une question, ${body.authorName.trim()}.`,
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+    // Mise à jour du rate limit pour ce nom
+    nameRateLimit.set(nameNorm, { timestamp: Date.now(), content: contentNorm });
+
+  } else {
+    // ── Utilisateur anonyme ────────────────────────────────────────────────
+    // Bloqué si : même contenu (normalisé) posté il y a < 10s
+    const entry = anonRateLimit.get(contentNorm);
+
+    if (entry) {
+      const remaining = getRemainingCooldown(entry.timestamp);
+      if (remaining !== null) {
+        return NextResponse.json(
+          {
+            error: `Merci d'attendre encore ${remaining}s avant de reposer cette question.`,
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+    // Mise à jour du rate limit pour ce contenu anonyme
+    anonRateLimit.set(contentNorm, { timestamp: Date.now() });
+  }
+
+  // 6. Créer la question
   const question = await prisma.question.create({
     data: {
-      content: body.content.trim(),
-      authorName: body.authorName?.trim() || null,
+      content:    body.content.trim(),
+      authorName: hasName ? body.authorName.trim() : null,
       sessionId,
     },
     select: {

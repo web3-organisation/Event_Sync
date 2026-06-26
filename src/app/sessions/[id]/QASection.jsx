@@ -1,12 +1,14 @@
-// app/sessions/[id]/QASection.jsx — Client Component
+// app/sessions/[id]/QASection.jsx
 "use client";
 
-import { useState, useTransition, useRef, useCallback } from "react";
+import { useState, useEffect, useTransition, useRef, useCallback } from "react";
 import { submitQuestion, upvoteQuestion, downvoteQuestion } from "./actions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronUp, faLock, faSpinner, faCheck,
+  faComments, faArrowUp, faClock,
+} from "@fortawesome/free-solid-svg-icons";
 
-// ─────────────────────────────────────────────
-// Constantes
-// ─────────────────────────────────────────────
 const MAX_CHARS = 280;
 const VOTED_KEY = (id) => `eventsync-voted-${id}`;
 
@@ -26,50 +28,15 @@ function formatRelative(iso) {
   return new Date(iso).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 }
 
-// ─────────────────────────────────────────────
-// Icons
-// ─────────────────────────────────────────────
-function IconChevronUp({ filled }) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24"
-      fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
-      <polyline points="18 15 12 9 6 15" />
-    </svg>
-  );
-}
-function IconLock() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" />
-    </svg>
-  );
-}
-function IconSpinner() {
-  return (
-    <svg className="qa-spinner" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-    </svg>
-  );
-}
-
-// ─────────────────────────────────────────────
-// Toast
-// ─────────────────────────────────────────────
 function Toast({ message, onDone }) {
   return (
-    <div className="qa-toast" role="alert" aria-live="assertive"
-      onAnimationEnd={onDone}>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="qa-toast__icon">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
+    <div className="qa-toast" role="alert" aria-live="assertive" onAnimationEnd={onDone}>
+      <FontAwesomeIcon icon={faCheck} style={{ width: "16px", height: "16px" }} className="qa-toast__icon" />
       {message}
     </div>
   );
 }
 
-// ─────────────────────────────────────────────
-// UpvoteButton — optimiste
-// ─────────────────────────────────────────────
 function UpvoteButton({ question, sessionId, voted, onToggle }) {
   const [isPending, startTransition] = useTransition();
   const isVoted = voted.has(question.id);
@@ -93,17 +60,25 @@ function UpvoteButton({ question, sessionId, voted, onToggle }) {
       aria-pressed={isVoted}
       aria-label={`${isVoted ? "Retirer vote" : "Upvoter"} — ${question.upvotes} votes`}
     >
-      <IconChevronUp filled={isVoted} />
+      <FontAwesomeIcon icon={faChevronUp} style={{ width: "16px", height: "16px" }} />
       <span className="upvote-count">{question.upvotes}</span>
       <span className="upvote-label">votes</span>
     </button>
   );
 }
 
-// ─────────────────────────────────────────────
-// QuestionCard
-// ─────────────────────────────────────────────
 function QuestionCard({ question, sessionId, voted, onToggle, isNew }) {
+  const [relativeTime, setRelativeTime] = useState("");
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRelativeTime(formatRelative(question.created_at));
+    const interval = setInterval(() => {
+      setRelativeTime(formatRelative(question.created_at));
+    }, 30_000);
+    return () => clearInterval(interval);
+  }, [question.created_at]);
+
   return (
     <li className={`question-card ${isNew ? "is-new" : ""}`}>
       <UpvoteButton question={question} sessionId={sessionId} voted={voted} onToggle={onToggle} />
@@ -113,7 +88,13 @@ function QuestionCard({ question, sessionId, voted, onToggle, isNew }) {
           <span className={`question-author ${!question.author_name ? "question-anon" : ""}`}>
             {question.author_name ?? "Anonyme"}
           </span>
-          <span className="question-time">· {formatRelative(question.created_at)}</span>
+          {/* ✅ Rendu conditionnel : vide au SSR, rempli au montage client */}
+          {relativeTime && (
+            <span className="question-time">
+              · <FontAwesomeIcon icon={faClock} style={{ width: "11px", height: "11px", marginRight: "3px" }} />
+              {relativeTime}
+            </span>
+          )}
           {isNew && <span className="question-new-badge">Nouvelle</span>}
         </div>
       </div>
@@ -121,15 +102,12 @@ function QuestionCard({ question, sessionId, voted, onToggle, isNew }) {
   );
 }
 
-// ─────────────────────────────────────────────
-// QAForm
-// ─────────────────────────────────────────────
 function QAForm({ sessionId, onSubmitted }) {
-  const [content, setContent]     = useState("");
-  const [author, setAuthor]       = useState("");
+  const [content, setContent]        = useState("");
+  const [author, setAuthor]          = useState("");
   const [isPending, startTransition] = useTransition();
-  const [error, setError]         = useState(null);
-  const textareaRef               = useRef(null);
+  const [error, setError]            = useState(null);
+  const textareaRef                  = useRef(null);
 
   const charsLeft = MAX_CHARS - content.length;
   const canSubmit = content.trim().length > 0 && charsLeft >= 0;
@@ -209,13 +187,17 @@ function QAForm({ sessionId, onSubmitted }) {
             : `${charsLeft} caractères restants`}
         </span>
         <div className="form-actions">
-          <span className="form-hint">⌘↵ pour envoyer</span>
+          <span className="form-hint">
+            <FontAwesomeIcon icon={faArrowUp} style={{ width: "11px", height: "11px" }} /> ⌘↵ pour envoyer
+          </span>
           <button
             className="btn btn--primary btn--sm"
             onClick={handleSubmit}
             disabled={!canSubmit || isPending}
           >
-            {isPending ? <><IconSpinner /> Envoi…</> : "Envoyer →"}
+            {isPending
+              ? <><FontAwesomeIcon icon={faSpinner} spin style={{ width: "14px", height: "14px" }} /> Envoi…</>
+              : "Envoyer →"}
           </button>
         </div>
       </div>
@@ -223,35 +205,30 @@ function QAForm({ sessionId, onSubmitted }) {
   );
 }
 
-// ─────────────────────────────────────────────
-// Main QASection
-// ─────────────────────────────────────────────
 export default function QASection({ sessionId, isLive, sessionStart, initialQuestions = [] }) {
-  // Questions — state local pour mises à jour optimistes
   const [questions, setQuestions] = useState(initialQuestions);
   const [newIds,    setNewIds]    = useState(new Set());
   const [sortMode,  setSortMode]  = useState("votes");
   const [toast,     setToast]     = useState(null);
-  // voted — initialisé côté client depuis localStorage
-  const [voted, setVoted]         = useState(() => {
-    if (typeof window === "undefined") return new Set();
-    return loadVoted(sessionId);
-  });
 
-  // ── Tri ──────────────────────────────────
+  const [voted, setVoted] = useState(new Set());
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVoted(loadVoted(sessionId));
+  }, [sessionId]);
+
   const sorted = [...questions].sort((a, b) =>
     sortMode === "votes"
       ? (b.upvotes - a.upvotes || new Date(b.created_at) - new Date(a.created_at))
       : (new Date(b.created_at) - new Date(a.created_at))
   );
 
-  // ── Toast helper ──────────────────────────
   const showToast = useCallback((msg) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  // ── Upvote toggle optimiste ───────────────
   function handleToggleVote(questionId, nowVoted) {
     setVoted((prev) => {
       const next = new Set(prev);
@@ -269,35 +246,32 @@ export default function QASection({ sessionId, isLive, sessionStart, initialQues
     showToast(nowVoted ? "Vote enregistré !" : "Vote retiré");
   }
 
-  // ── Nouvelle question (optimiste) ─────────
   function handleNewQuestion({ content, author_name }) {
     const tempId = `temp-${Date.now()}`;
     const newQ = {
-      id:          tempId,
+      id:         tempId,
       content,
       author_name,
-      upvotes:     0,
-      created_at:  new Date().toISOString(),
+      upvotes:    0,
+      created_at: new Date().toISOString(),
     };
     setQuestions((prev) => [newQ, ...prev]);
     setNewIds((prev) => new Set([...prev, tempId]));
     setSortMode("recent");
     showToast("Question envoyée !");
-    // Retire le badge "new" au bout de 8s
     setTimeout(() => {
       setNewIds((prev) => { const n = new Set(prev); n.delete(tempId); return n; });
     }, 8000);
   }
 
-  // ─────────────────────────────────────────
-  // Rendu — session pas encore live
-  // ─────────────────────────────────────────
   if (!isLive) {
     return (
       <div className="qa-section">
         <h2 className="qa-title">Questions / Réponses</h2>
         <div className="qa-locked" role="status">
-          <div className="qa-locked__icon"><IconLock /></div>
+          <div className="qa-locked__icon">
+            <FontAwesomeIcon icon={faLock} style={{ width: "22px", height: "22px" }} />
+          </div>
           <p className="qa-locked__title">Q&A disponible pendant la session</p>
           <p className="qa-locked__desc">
             Le système de questions sera accessible dès le début de la session à{" "}
@@ -308,14 +282,10 @@ export default function QASection({ sessionId, isLive, sessionStart, initialQues
     );
   }
 
-  // ─────────────────────────────────────────
-  // Rendu — session live
-  // ─────────────────────────────────────────
   return (
     <div className="qa-section">
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
 
-      {/* Header Q&A */}
       <div className="qa-header">
         <div>
           <h2 className="qa-title">
@@ -330,25 +300,25 @@ export default function QASection({ sessionId, isLive, sessionStart, initialQues
             onClick={() => setSortMode("votes")}
             aria-pressed={sortMode === "votes"}
           >
-            ▲ Votes
+            <FontAwesomeIcon icon={faChevronUp} style={{ width: "12px", height: "12px" }} /> Votes
           </button>
           <button
             className={`sort-btn ${sortMode === "recent" ? "active" : ""}`}
             onClick={() => setSortMode("recent")}
             aria-pressed={sortMode === "recent"}
           >
-            ⏱ Récent
+            <FontAwesomeIcon icon={faClock} style={{ width: "12px", height: "12px" }} /> Récent
           </button>
         </div>
       </div>
 
-      {/* Formulaire */}
       <QAForm sessionId={sessionId} onSubmitted={handleNewQuestion} />
 
-      {/* Liste */}
       {sorted.length === 0 ? (
         <div className="qa-empty" role="status">
-          <div className="qa-empty__icon">💬</div>
+          <div className="qa-empty__icon">
+            <FontAwesomeIcon icon={faComments} style={{ width: "32px", height: "32px" }} />
+          </div>
           <p className="qa-empty__title">Aucune question pour l&#39;instant</p>
           <p className="qa-empty__desc">Soyez le premier à interroger l&#39;intervenant !</p>
         </div>

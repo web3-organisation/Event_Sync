@@ -1,9 +1,11 @@
+//src/app/session/[id]/page.jsx
 import "../../css/session.css";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import QASection from "./QASection";
+import StreamSection from "./StreamSection";
 import FavButton from "./FavButton";
 
 function isLive(session) {
@@ -11,11 +13,17 @@ function isLive(session) {
   return now >= session.startTime && now <= session.endTime;
 }
 
+function isEnded(session) {
+  const now = new Date();
+  return now > session.endTime;
+}
+
 function formatTime(date) {
   if (!date) return "";
   return new Date(date).toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Paris",
   });
 }
 
@@ -107,9 +115,10 @@ function SpeakerAvatar({ speaker, size = "lg" }) {
   );
 }
 
+
 export default async function SessionPage({ params }) {
   const { id } = await params;
-  
+
   const session = await prisma.session.findUnique({
     where: { id },
     include: {
@@ -137,6 +146,7 @@ export default async function SessionPage({ params }) {
   if (!session) notFound();
 
   const live      = isLive(session);
+  const ended     = isEnded(session);
   const speakers  = session.sessionSpeakers.map((ss) => ss.speaker);
   const questions = session.questions;
   const timeStart = formatTime(session.startTime);
@@ -145,9 +155,11 @@ export default async function SessionPage({ params }) {
   return (
     <div className="container">
       <nav className="breadcrumb" aria-label="Fil d'Ariane">
-        <Link href="/">Accueil</Link>
+        <Link href="/">Evenement</Link>
         <span className="breadcrumb-sep">›</span>
-        <Link href={`/sessions`}>Sessions</Link>
+        <Link href={`/planning?eventId=${session.event.id}`}>
+          {session.event.title}
+        </Link>
         <span className="breadcrumb-sep">›</span>
         <span className="breadcrumb-current">{session.title}</span>
       </nav>
@@ -157,14 +169,16 @@ export default async function SessionPage({ params }) {
           <div className="session-hero__badges">
             {live
               ? <span className="live-badge"><span className="live-dot" />LIVE</span>
+              : ended
+              ? <span className="status-badge status-ended">Terminée</span>
               : <span className="status-badge status-upcoming">À venir</span>}
           </div>
 
           <h1 className="session-hero__title">{session.title}</h1>
 
           <div className="session-hero__actions">
-            <Link href={`/sessions`} className="btn btn--outline btn--sm">
-              <IconBack /> Retour aux sessions
+            <Link href={`/planning?eventId=${session.event.id}`} className="btn btn--outline btn--sm">
+              <IconBack /> Retour au planning
             </Link>
             {live && <a href="#qa" className="btn btn--teal btn--sm">Poser une question →</a>}
           </div>
@@ -181,6 +195,13 @@ export default async function SessionPage({ params }) {
               ))}
             </section>
           )}
+
+          <StreamSection
+            live={live}
+            ended={ended}
+            timeStart={timeStart}
+            title={session.title}
+          />
 
           {speakers.length > 0 && (
             <section aria-label="Intervenants">

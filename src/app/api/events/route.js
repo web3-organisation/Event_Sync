@@ -1,4 +1,24 @@
-import prisma from "@/lib/prisma";
+//src/app/api/events/route.js
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET() {
+  try {
+    const events = await prisma.event.findMany({
+      orderBy: { startDate: "asc" },
+      include: {
+        _count: {
+          select: { sessions: true, rooms: true },
+        },
+      },
+    });
+
+    return NextResponse.json(events);
+  } catch (error) {
+    console.error("GET /api/events error:", error);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
+}
 
 export async function POST(request) {
   try {
@@ -6,7 +26,7 @@ export async function POST(request) {
     const { title, description, startDate, endDate, location } = body;
 
     if (!title || !startDate || !endDate) {
-      return Response.json(
+      return NextResponse.json(
         { error: "Le titre, la date de début et la date de fin sont requis." },
         { status: 400 }
       );
@@ -16,14 +36,14 @@ export async function POST(request) {
     const end = new Date(endDate);
 
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      return Response.json(
+      return NextResponse.json(
         { error: "Les dates fournies ne sont pas valides." },
         { status: 400 }
       );
     }
 
     if (start > end) {
-      return Response.json(
+      return NextResponse.json(
         { error: "La date de début doit être antérieure à la date de fin." },
         { status: 400 }
       );
@@ -39,10 +59,10 @@ export async function POST(request) {
       },
     });
 
-    return Response.json(newEvent, { status: 201 });
+    return NextResponse.json(newEvent, { status: 201 });
   } catch (error) {
     console.error("[POST /api/events] Error:", error);
-    return Response.json(
+    return NextResponse.json(
       { error: "Impossible de créer l'événement." },
       { status: 500 }
     );
