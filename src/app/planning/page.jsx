@@ -125,7 +125,7 @@ export default async function SchedulePage({ searchParams }) {
   }}
 >
   <FontAwesomeIcon icon={faGear} style={{ width: "14px", height: "14px" }} />
-  Gérer les événements
+  Gérer les séssions
 </Link>
         </div>
 

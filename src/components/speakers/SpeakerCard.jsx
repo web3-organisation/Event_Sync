@@ -34,11 +34,6 @@ export function SpeakerModal({ speaker, onClose }) {
     }, [onClose]);
 
     if (!speaker || !mounted) return null;
-
-    const linkedin = speaker.links?.find((l) => l.label?.toLowerCase() === "linkedin");
-    const email    = speaker.links?.find((l) => l.label?.toLowerCase() === "email");
-    const phone    = speaker.links?.find((l) => l.label?.toLowerCase() === "phone");
-
     return createPortal(
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -59,24 +54,6 @@ export function SpeakerModal({ speaker, onClose }) {
                     </h2>
 
                     {speaker.bio && <p className={styles.modalBio}>{speaker.bio}</p>}
-
-                    <div className={styles.modalActions}>
-                        {email && (
-                            <a href={`mailto:${email.url}`} className={styles.actionBtn}>
-                                ✉ Email
-                            </a>
-                        )}
-                        {phone && (
-                            <a href={`tel:${phone.url}`} className={styles.actionBtn}>
-                                ☎ Téléphone
-                            </a>
-                        )}
-                        {linkedin && (
-                            <a href={linkedin.url} target="_blank" rel="noreferrer" className={styles.actionBtn}>
-                                in LinkedIn
-                            </a>
-                        )}
-                    </div>
                 </div>
             </div>
         </div>,
@@ -84,7 +61,6 @@ export function SpeakerModal({ speaker, onClose }) {
     );
 }
 
-/* ── Card ── */
 export default function SpeakerCard({ speaker, searchQuery = "", onModalClose }) {
     const [showModal, setShowModal] = useState(false);
 
@@ -115,7 +91,6 @@ export default function SpeakerCard({ speaker, searchQuery = "", onModalClose })
                 <div className={styles.cardBody}>
                     <div className={styles.nameRow}>
                         <span className={styles.name}>{highlight(speaker.fullName, searchQuery)}</span>
-                        <span className={styles.verifiedBadge}>✔</span>
                     </div>
                     {speaker.bio && (
                         <p className={styles.bio}>

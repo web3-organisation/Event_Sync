@@ -1,22 +1,8 @@
-/* ==========================================================
-   EVENT PAGE - Spécifique
-   Compatible avec le système de thème global
-========================================================== */
-
-/* ==========================================================
-   LAYOUT PRINCIPAL
-========================================================== */
-
 .event-page {
   min-height: 100vh;
   background: var(--background);
   padding: 0;
 }
-
-/* ==========================================================
-   HEADER / HERO
-========================================================== */
-
 .event-header {
   position: relative;
   overflow: hidden;
@@ -569,5 +555,68 @@ html[data-theme="dark"] .event-card:hover .card-cta {
 
   .hero-title {
     font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+}
+/* ── Header Actions (Bouton Admin) ── */
+.header-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.admin-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ev-primary, #6C63FF);
+  color: #ffffff;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.35);
+  transition: all var(--transition, 0.3s ease);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.admin-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(108, 99, 255, 0.45);
+  background: var(--ev-primary-hover, #5A4BFF);
+  color: #ffffff;
+}
+
+.admin-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.35);
+  color: white;
+}
+
+.admin-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition, 0.3s ease);
+  color: #ffffff;
+}
+
+.admin-button:hover .admin-icon {
+  transform: rotate(90deg);
+}
+
+@media (max-width: 640px) {
+  .header-actions {
+    margin-top: 16px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .admin-button {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 14px;
   }
 }

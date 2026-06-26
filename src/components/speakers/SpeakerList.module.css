@@ -1,175 +1,370 @@
+/* ── Page Layout ── */
 .page {
-    min-height: 100vh;
-    padding: 48px 32px;
-    background: var(--ev-surface);
+  min-height: 100vh;
+  padding: 48px 32px;
+  background: var(--background-secondary);
 }
 
 .container {
-    max-width: 1280px;
-    margin: 0 auto;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 /* ── Search + Stats row ── */
 .searchContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    gap: 40px;
-    margin-bottom: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 40px;
+  margin-bottom: 40px;
 }
 
 .searchBarContainer {
-    flex: 1;
+  flex: 1;
 }
 
 /* ── Stats ── */
 .stats {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 12px;
-    flex-shrink: 0;
-    padding-bottom: 2px;
-    margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+  min-width: 220px;
+}
+
+.stats:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--ev-primary-light);
 }
 
 .statsRow {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .statCard {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    background: transparent;
-    border: none;
-    padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  padding: 0;
+  position: relative;
+}
+
+.statCard:first-child {
+  align-items: flex-start;
+}
+
+.statCard:last-child {
+  align-items: flex-end;
 }
 
 .statValue {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--ev-dark);
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  font-family: "Bricolage Grotesque", sans-serif;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
-.statValue em {
-    font-style: normal;
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--ev-primary);
-    margin-left: 4px;
+.statUnit {
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: 2px;
+  letter-spacing: 0.02em;
 }
 
 .statLabel {
-    font-size: 11px;
-    font-weight: 600;
-    color: #6B7FA3;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-top: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ev-primary);
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
 .statDivider {
-    width: 1px;
-    height: 36px;
-    background: var(--ev-border);
-    flex-shrink: 0;
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ── Animation du point ── */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
 }
 
 /* ── No results ── */
 .noResults {
-    text-align: center;
-    padding: 80px 20px;
-    margin-bottom: 24px;
+  text-align: center;
+  padding: 80px 20px;
+  margin-bottom: 24px;
 }
 
 .noResultsIcon {
-    font-size: 50px;
-    font-weight: 600;
-    color: #4B5E7A;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
+  font-size: 50px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
 }
 
 .noResultsText {
-    font-size: 60px;
-    color: var(--ev-dark);
-    margin-bottom: 25px;
-    font-family: 'Space Grotesk', sans-serif;
+  font-size: 60px;
+  color: var(--text-primary);
+  margin-bottom: 25px;
+  font-family: "Bricolage Grotesque", sans-serif;
 }
 
 .noResultsScuse {
-    font-size: 20px;
-    color: #6B7FA3;
-    margin-bottom: 28px;
-    font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  font-family: "Bricolage Grotesque", sans-serif;
 }
 
 .resetBtn {
-    background: transparent;
-    color: var(--ev-primary);
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 0;
-    transition: color 0.2s;
+  background: transparent;
+  color: var(--ev-primary);
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: all var(--transition);
+  border-radius: var(--radius-sm);
 }
 
 .resetBtn:hover {
-    color: var(--ev-accent);
+  color: var(--ev-accent);
+  background: var(--ev-primary-light);
 }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-    .searchContainer {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 28px;
-    }
-
-    .stats {
-        align-items: flex-start;
-    }
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
 
 /* ── Day header ── */
 .dayHeader {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 24px;
-    margin-top: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+  margin-top: 8px;
 }
 
 .dayLabel {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--ev-dark);
-    font-family: 'Space Grotesk', sans-serif;
-    white-space: nowrap;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: "Bricolage Grotesque", sans-serif;
+  white-space: nowrap;
 }
 
 .dayDate {
-    font-size: 13px;
-    color: #6B7FA3;
-    white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .daySep {
-    flex: 1;
-    height: 1px;
-    background: var(--ev-border);
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .searchContainer {
+    gap: 24px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 32px 20px;
+  }
+
+  .searchContainer {
+    flex-direction: column;
+    align-items: stretch;
     gap: 20px;
+  }
+
+  .stats {
+    align-items: stretch;
+    padding: 14px 18px;
+    min-width: unset;
+    width: 100%;
+  }
+
+  .statsRow {
+    justify-content: space-around;
+    gap: 16px;
+  }
+
+  .statCard:first-child,
+  .statCard:last-child {
+    align-items: center;
+  }
+
+  .statValue {
+    font-size: 28px;
+  }
+
+  .statUnit {
+    font-size: 13px;
+  }
+
+  .statDivider {
+    height: 32px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+
+  .noResultsIcon {
+    font-size: 36px;
+  }
+
+  .noResultsText {
+    font-size: 40px;
+  }
+
+  .noResultsScuse {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 20px 14px;
+  }
+
+  .searchContainer {
+    gap: 16px;
+  }
+
+  .stats {
+    padding: 12px 14px;
+  }
+
+  .statsRow {
+    gap: 12px;
+  }
+
+  .statValue {
+    font-size: 24px;
+  }
+
+  .statUnit {
+    font-size: 12px;
+  }
+
+  .statLabel {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  .statDivider {
+    height: 28px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .dayHeader {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dayLabel {
+    font-size: 16px;
+  }
+
+  .dayDate {
+    font-size: 12px;
+  }
+
+  .noResults {
+    padding: 40px 16px;
+  }
+
+  .noResultsIcon {
+    font-size: 28px;
+  }
+
+  .noResultsText {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .noResultsScuse {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
+
+/* ── Utilitaires ── */
+.hidden {
+  display: none !important;
+}
+
+.visuallyHidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

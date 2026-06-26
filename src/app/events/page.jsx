@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Calendar, MapPin, Users, ChevronRight, Zap } from "lucide-react";
 import { formatEventDate } from "@/lib/session-utils";
 import "../css/event.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 // Couleurs disponibles pour les gradients
 const GRADIENT_COLORS = [
@@ -22,12 +24,8 @@ const GRADIENT_COLORS = [
 
 // Fonction pour générer un gradient aléatoire à 3 couleurs
 const getRandomGradient = () => {
-  // Mélanger les couleurs
   const shuffled = [...GRADIENT_COLORS].sort(() => Math.random() - 0.5);
-  // Prendre 3 couleurs aléatoires
   const selected = shuffled.slice(0, 3);
-  
-  // Retourner un gradient avec les 3 couleurs
   return `linear-gradient(90deg, ${selected[0]}, ${selected[1]}, ${selected[2]})`;
 };
 
@@ -92,31 +90,34 @@ export default function EventsPage() {
             Découvrez les conférences, workshops et summits. Consultez les plannings,
             les intervenants et les sessions en direct.
           </p>
+
+          {/* Bouton Gérer les événements - placé en bas du header */}
+          <div className="header-actions animate-slide-up s3">
+            <Link
+              href="/admin/events"
+              className="admin-button"
+            >
+              <FontAwesomeIcon icon={faGear} className="admin-icon" />
+              Gérer les événements
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Content */}
       <section className="event-section">
-        {/* Loading State */}
         {loading && (
           <div className="loading-state">
             <span className="spinner" />
             Chargement des événements…
           </div>
         )}
-
-        {/* Error State */}
         {error && <div className="error-state">{error}</div>}
-
-        {/* Empty State */}
         {!loading && !error && events.length === 0 && (
           <div className="empty-state">
             <Calendar size={48} strokeWidth={1} className="empty-icon" />
             <p className="empty-text">Aucun événement disponible pour le moment.</p>
           </div>
         )}
-
-        {/* Events Grid */}
         <div className="events-grid">
           {events.map((event, i) => {
             const isOngoing =
@@ -134,7 +135,6 @@ export default function EventsPage() {
                 href={`/planning?eventId=${event.id}`}
                 className={`event-card animate-slide-up s${Math.min(i + 1, 6)}`}
               >
-                {/* Gradient bar - random colors */}
                 <div 
                   className="gradient-bar"
                   style={{ background: eventGradient.bar }}
@@ -143,7 +143,6 @@ export default function EventsPage() {
                 <div className="card-content">
                   <div className="card-inner">
                     <div className="card-body">
-                      {/* Status badge */}
                       {isOngoing && (
                         <span className="status-badge">
                           <span className="pulse-dot" />
@@ -156,8 +155,6 @@ export default function EventsPage() {
                       {event.description && (
                         <p className="event-description">{event.description}</p>
                       )}
-
-                      {/* Meta */}
                       <div className="event-meta">
                         <MetaItem icon={<Calendar size={14} />}>
                           {formatEventDate(event.startDate)}
@@ -179,7 +176,6 @@ export default function EventsPage() {
                       </div>
                     </div>
 
-                    {/* CTA arrow with random gradient */}
                     <div
                       className="card-cta"
                       style={{ background: eventGradient.cta }}

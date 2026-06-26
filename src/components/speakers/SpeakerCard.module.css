@@ -1,32 +1,31 @@
 /* ── Card ── */
 .card {
     position: relative;
-    background: #ffffff;
-    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
     overflow: hidden;
     cursor: pointer;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    box-shadow: var(--shadow-md);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     width: 100%;
-    height: 320px; /* hauteur fixe */
+    height: 320px;
 }
 
 .card:hover {
-    box-shadow: 0 12px 36px rgba(99, 102, 241, 0.18);
+    box-shadow: 0 12px 36px rgba(108, 99, 255, 0.18);
     transform: translateY(-3px);
 }
 
-/* ── Photo : toujours en position absolue, pleine card ── */
+/* ── Photo ── */
 .photoWrap {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #ede9fe, #c7d2fe);
-    transition: opacity 0.3s ease;
+    background: var(--ev-primary-light);
 }
 
-/* Par défaut : la photo ne couvre que les 2/3 supérieurs */
 .photoWrap::after {
     content: "";
     position: absolute;
@@ -34,18 +33,17 @@
     background: linear-gradient(
         to bottom,
         transparent 40%,
-        #ffffff 68%,
-        #ffffff 100%
+        var(--surface) 68%,
+        var(--surface) 100%
     );
     transition: background 0.35s ease;
 }
 
-/* Au hover : le dégradé descend pour laisser la photo dominer */
 .card:hover .photoWrap::after {
     background: linear-gradient(
         to bottom,
         transparent 55%,
-        rgba(15, 23, 42, 0.55) 100%
+        rgba(0, 0, 0, 0.65) 100%
     );
 }
 
@@ -70,10 +68,10 @@
     justify-content: center;
     font-size: 3rem;
     font-weight: 700;
-    color: #6366f1;
+    color: var(--ev-primary);
 }
 
-/* ── Card body : positionné au bas de la card ── */
+/* ── Card body ── */
 .cardBody {
     position: absolute;
     bottom: 0;
@@ -81,12 +79,6 @@
     right: 0;
     padding: 14px 16px 18px;
     z-index: 2;
-    transition: padding 0.35s ease;
-}
-
-/* Au hover : texte en blanc car fond devient sombre */
-.card:hover .cardBody {
-    padding-bottom: 22px;
 }
 
 .nameRow {
@@ -99,7 +91,7 @@
 .name {
     font-size: 1rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary);
     line-height: 1.2;
     transition: color 0.3s ease;
 }
@@ -108,22 +100,9 @@
     color: #ffffff;
 }
 
-.verifiedBadge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    background: #16a34a;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 0.5rem;
-    flex-shrink: 0;
-}
-
 .bio {
     font-size: 0.82rem;
-    color: #64748b;
+    color: var(--text-secondary);
     line-height: 1.5;
     margin: 0;
     transition: color 0.3s ease;
@@ -134,15 +113,16 @@
 }
 
 .highlight {
-    background: #fef08a;
+    background: var(--ev-warning);
     border-radius: 2px;
+    color: var(--text-primary);
 }
 
 /* ── Overlay ── */
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.55);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
     z-index: 1000;
     display: flex;
@@ -159,13 +139,14 @@
 
 /* ── Modal ── */
 .modal {
-    background: #ffffff;
-    border-radius: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
     width: 100%;
     max-width: 440px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
     animation: slideUp 0.25s ease;
     max-height: 90vh;
     overflow-y: auto;
@@ -181,8 +162,8 @@
     top: 12px;
     right: 12px;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.85);
-    border: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 50%;
     width: 32px;
     height: 32px;
@@ -191,20 +172,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #0f172a;
-    backdrop-filter: blur(4px);
-    transition: background 0.2s;
+    color: var(--text-secondary);
+    transition: background 0.2s, color 0.2s;
 }
 
 .closeBtn:hover {
-    background: #ffffff;
+    background: var(--ev-primary-light);
+    color: var(--ev-primary);
 }
 
 .modalPhoto {
     width: 100%;
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    background: linear-gradient(135deg, #ede9fe, #c7d2fe);
+    background: var(--ev-primary-light);
 }
 
 .modalPhoto img {
@@ -222,7 +203,7 @@
     justify-content: center;
     font-size: 4rem;
     font-weight: 700;
-    color: #6366f1;
+    color: var(--ev-primary);
 }
 
 .modalBody {
@@ -232,7 +213,7 @@
 .modalName {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary);
     margin: 0 0 10px;
     display: flex;
     align-items: center;
@@ -245,7 +226,7 @@
     justify-content: center;
     width: 20px;
     height: 20px;
-    background: #16a34a;
+    background: var(--ev-success);
     color: #fff;
     border-radius: 50%;
     font-size: 0.55rem;
@@ -254,7 +235,7 @@
 
 .modalBio {
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--text-secondary);
     line-height: 1.65;
     margin: 0 0 20px;
 }
@@ -271,7 +252,7 @@
     gap: 6px;
     padding: 8px 18px;
     border-radius: 999px;
-    background: #6366f1;
+    background: var(--ev-primary);
     color: #fff;
     font-size: 0.85rem;
     font-weight: 600;
@@ -280,7 +261,7 @@
 }
 
 .actionBtn:hover {
-    background: #4f46e5;
+    background: var(--ev-primary-hover);
 }
 
 @media (max-width: 640px) {
