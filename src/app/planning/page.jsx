@@ -9,7 +9,7 @@ import {
   faLocationDot,
   faBuildingColumns,
   faCircleDot,
-  faGear, 
+  faGear,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const dynamic = "force-dynamic";
@@ -81,7 +81,11 @@ export default async function SchedulePage({ searchParams }) {
         <span className={`${styles.badge} ${styles.badgeLive}`}>
           <FontAwesomeIcon
             icon={faCircleDot}
-            style={{ width: "10px", height: "10px", color: "var(--ev-success)" }}
+            style={{
+              width: "10px",
+              height: "10px",
+              color: "var(--ev-success)",
+            }}
           />
           Planning connecté
         </span>
@@ -90,7 +94,14 @@ export default async function SchedulePage({ searchParams }) {
           {event ? event.title : "Planning global"}
         </h1>
 
-        <div style={{ display: "flex", gap: "12px", margin: "20px 0", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+            margin: "20px 0",
+            flexWrap: "wrap",
+          }}
+        >
           <Link
             href="/events"
             style={{
@@ -110,23 +121,28 @@ export default async function SchedulePage({ searchParams }) {
           </Link>
 
           <Link
-  href="/admin/events"
-  style={{
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    background: "var(--ev-primary)",
-    color: "var(--ev-background)",
-    padding: "10px 24px",
-    borderRadius: "8px",
-    fontWeight: "bold",
-    textDecoration: "none",
-    boxShadow: "0 4px 14px 0 rgba(245, 158, 11, 0.39)",
-  }}
->
-  <FontAwesomeIcon icon={faGear} style={{ width: "14px", height: "14px" }} />
-  Gérer les séssions
-</Link>
+            href="http://localhost:5173"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "var(--ev-primary)",
+              color: "#ffffff",
+              padding: "10px 24px",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              textDecoration: "none",
+              boxShadow: "0 4px 14px 0 rgba(108, 99, 255, 0.35)",
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faGear}
+              style={{ width: "14px", height: "14px" }}
+            />
+            Gérer les sessions
+          </Link>
         </div>
 
         {event && (
@@ -169,7 +185,10 @@ export default async function SchedulePage({ searchParams }) {
       {sessions.length === 0 ? (
         <div className={styles.noSessions}>
           <span className={styles.noSessionsIcon}>
-            <FontAwesomeIcon icon={faCalendarDays} style={{ width: "32px", height: "32px" }} />
+            <FontAwesomeIcon
+              icon={faCalendarDays}
+              style={{ width: "32px", height: "32px" }}
+            />
           </span>
           <h2 className={styles.noSessionsTitle}>
             {event

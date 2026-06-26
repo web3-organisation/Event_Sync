@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import styles from './AddEventModal.module.css';
 
 export default function AddEventModal() {
   const router = useRouter();

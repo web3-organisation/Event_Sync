@@ -63,7 +63,7 @@ export default function EventsPage() {
       .catch(() => setError("Erreur réseau."))
       .finally(() => setLoading(false));
   }, []);
-
+  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_CORS_ORIGIN ?? "#";
   return (
     <main className="event-page">
       {/* Hero header */}
@@ -80,21 +80,20 @@ export default function EventsPage() {
           </div>
 
           <h1 className="hero-title animate-slide-up s1">
-            Tous les{" "}
-            <span className="gradient-text">
-              événements
-            </span>
+            Tous les <span className="gradient-text">événements</span>
           </h1>
 
           <p className="hero-subtitle animate-slide-up s2">
-            Découvrez les conférences, workshops et summits. Consultez les plannings,
-            les intervenants et les sessions en direct.
+            Découvrez les conférences, workshops et summits. Consultez les
+            plannings, les intervenants et les sessions en direct.
           </p>
 
           {/* Bouton Gérer les événements - placé en bas du header */}
           <div className="header-actions animate-slide-up s3">
             <Link
-              href="/admin/events"
+              href={adminUrl ?? "#"}
+              target="_blank"
+              rel="noreferrer"
               className="admin-button"
             >
               <FontAwesomeIcon icon={faGear} className="admin-icon" />
@@ -115,7 +114,9 @@ export default function EventsPage() {
         {!loading && !error && events.length === 0 && (
           <div className="empty-state">
             <Calendar size={48} strokeWidth={1} className="empty-icon" />
-            <p className="empty-text">Aucun événement disponible pour le moment.</p>
+            <p className="empty-text">
+              Aucun événement disponible pour le moment.
+            </p>
           </div>
         )}
         <div className="events-grid">
@@ -135,7 +136,7 @@ export default function EventsPage() {
                 href={`/planning?eventId=${event.id}`}
                 className={`event-card animate-slide-up s${Math.min(i + 1, 6)}`}
               >
-                <div 
+                <div
                   className="gradient-bar"
                   style={{ background: eventGradient.bar }}
                 />
@@ -158,7 +159,8 @@ export default function EventsPage() {
                       <div className="event-meta">
                         <MetaItem icon={<Calendar size={14} />}>
                           {formatEventDate(event.startDate)}
-                          {event.startDate.split("T")[0] !== event.endDate.split("T")[0] &&
+                          {event.startDate.split("T")[0] !==
+                            event.endDate.split("T")[0] &&
                             ` → ${formatEventDate(event.endDate)}`}
                         </MetaItem>
 
@@ -170,7 +172,8 @@ export default function EventsPage() {
 
                         <MetaItem icon={<Users size={14} />}>
                           {event._count.sessions} session
-                          {event._count.sessions !== 1 ? "s" : ""} · {event._count.rooms} salle
+                          {event._count.sessions !== 1 ? "s" : ""} ·{" "}
+                          {event._count.rooms} salle
                           {event._count.rooms !== 1 ? "s" : ""}
                         </MetaItem>
                       </div>
