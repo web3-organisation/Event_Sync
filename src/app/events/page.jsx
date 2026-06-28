@@ -1,3 +1,4 @@
+// src/app/events/page.jsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -63,7 +64,7 @@ export default function EventsPage() {
       .catch(() => setError("Erreur réseau."))
       .finally(() => setLoading(false));
   }, []);
-  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_CORS_ORIGIN ?? "#";
+  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL ?? "#";
   return (
     <main className="event-page">
       {/* Hero header */}

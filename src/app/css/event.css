@@ -339,9 +339,6 @@ html[data-theme="dark"] .status-badge {
   transition: color var(--transition);
 }
 
-/* ==========================================================
-   CARD DESCRIPTION
-========================================================== */
 
 .event-card .event-description {
   color: var(--text-secondary);
@@ -355,9 +352,6 @@ html[data-theme="dark"] .status-badge {
   transition: color var(--transition);
 }
 
-/* ==========================================================
-   EVENT META
-========================================================== */
 
 .event-meta {
   display: flex;
@@ -378,10 +372,6 @@ html[data-theme="dark"] .status-badge {
   flex-shrink: 0;
   transition: color var(--transition);
 }
-
-/* ==========================================================
-   CTA ARROW BUTTON
-========================================================== */
 
 .card-cta {
   display: flex;

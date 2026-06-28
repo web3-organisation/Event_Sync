@@ -1,16 +1,13 @@
 // src/app/api/sessions/[id]/questions/route.js
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
-import { isSessionLive } from "../../../../lib/session-utils";
+import { isSessionLive } from "../../../../../lib/session-utils";
 
-const COOLDOWN_MS = 10_000; // 10 secondes
+const COOLDOWN_MS = 10_000; 
 
-// Maps en mémoire pour le rate limiting
-// clé → { timestamp, content }
-const anonRateLimit = new Map();  // content_normalisé → { timestamp }
-const nameRateLimit = new Map();  // nom_normalisé     → { timestamp, content }
+const anonRateLimit = new Map();  
+const nameRateLimit = new Map();  
 
-// ── Helpers ────────────────────────────────────────────────────────────────
 function normalizeContent(str) {
   return str.trim().toLowerCase();
 }

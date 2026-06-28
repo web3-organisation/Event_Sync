@@ -1,9 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Admin {
@@ -30,7 +32,6 @@ model Event {
   location    String?
   createdAt   DateTime @default(now()) @map("created_at")
 
-  rooms       Room[]
   sessions    Session[]
   adminEvents AdminEvent[]
 
@@ -40,9 +41,7 @@ model Event {
 model Room {
   id      String @id @default(uuid())
   name    String
-  eventId String @map("event_id")
 
-  event      Event       @relation(fields: [eventId], references: [id])
   sessions   Session[]
   adminRooms AdminRoom[]
 

@@ -1,7 +1,7 @@
 //src/app/api/questions/[id]/upvote/route.js
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
-import { isSessionLive } from "../../../../lib/session-utils";
+import { isSessionLive } from "../../../../../lib/session-utils";
 
 const COOLDOWN_MS = 10_000; // 10 secondes
 

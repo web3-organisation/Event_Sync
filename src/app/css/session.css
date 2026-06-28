@@ -855,14 +855,6 @@ body {
   }
 }
 
-/* ============================================================
-   STREAM SECTION (mock)
-   ============================================================ */
-.stream-section {
-  /* hérite du gap de session-main */
-}
-
-/* ── LIVE PLAYER ── */
 .stream-player {
   border-radius: var(--radius-lg);
   overflow: hidden;
