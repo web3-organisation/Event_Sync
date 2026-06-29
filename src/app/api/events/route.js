@@ -1,5 +1,20 @@
 import prisma from "@/lib/prisma";
 
+export async function GET() {
+  try {
+    const events = await prisma.event.findMany({
+      orderBy: { startDate: "asc" },
+    });
+    return Response.json(events);
+  } catch (error) {
+    console.error("[GET /api/events] Error:", error);
+    return Response.json(
+      { error: "Impossible de récupérer les événements." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request) {
   try {
     const body = await request.json();

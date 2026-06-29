@@ -76,6 +76,9 @@ export default async function AdminEventsPage() {
               <td>{new Date(e.endDate).toLocaleDateString("fr-FR")}</td>
               <td>{e.location ?? "-"}</td>
               <td>
+                <Link href={`/admin/events/${e.id}`} className={styles.btnSecondary} style={{ marginRight: '10px' }}>
+                  Gérer les sessions
+                </Link>
                 <form action={deleteEvent} className={styles.deleteForm}>
                   <input type="hidden" name="id" value={e.id} />
                   <button type="submit" className={styles.deleteButton}>🗑️ Supprimer</button>
