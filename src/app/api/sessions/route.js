@@ -1,9 +1,19 @@
 import prisma from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const _start = parseInt(searchParams.get("_start") || "0", 10);
+    const _end = parseInt(searchParams.get("_end") || "10", 10);
+    const _sort = searchParams.get("_sort") || "startTime";
+    const _order = searchParams.get("_order") || "asc";
+
+    const total = await prisma.session.count();
+
     const sessions = await prisma.session.findMany({
-      orderBy: { startTime: "asc" },
+      skip: _start,
+      take: _end - _start,
+      orderBy: { [_sort]: _order.toLowerCase() },
       include: {
         room: true,
         sessionSpeakers: {
@@ -26,7 +36,12 @@ export async function GET() {
       speakers: s.sessionSpeakers.map((ss) => ss.speaker.fullName),
     }));
 
-    return Response.json(formatted);
+    return Response.json(formatted, {
+      status: 200,
+      headers: {
+        "X-Total-Count": total.toString(),
+      },
+    });
   } catch (error) {
     console.error("[GET /api/sessions] Error:", error);
     return Response.json(

@@ -1,11 +1,27 @@
 import prisma from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const _start = parseInt(searchParams.get("_start") || "0", 10);
+    const _end = parseInt(searchParams.get("_end") || "10", 10);
+    const _sort = searchParams.get("_sort") || "startDate";
+    const _order = searchParams.get("_order") || "asc";
+
+    const total = await prisma.event.count();
+
     const events = await prisma.event.findMany({
-      orderBy: { startDate: "asc" },
+      skip: _start,
+      take: _end - _start,
+      orderBy: { [_sort]: _order.toLowerCase() },
     });
-    return Response.json(events);
+
+    return Response.json(events, {
+      status: 200,
+      headers: {
+        "X-Total-Count": total.toString(),
+      },
+    });
   } catch (error) {
     console.error("[GET /api/events] Error:", error);
     return Response.json(
