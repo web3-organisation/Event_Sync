@@ -34,6 +34,9 @@ const dmSans = DM_Sans({
 export const metadata = {
   title: "EventSync — Votre planning de conférences",
   description: "Gérez vos sessions favorites et posez vos questions en direct.",
+  icons: {
+    icon: '/icon.ico',
+  },
 };
 
 function Header() {
